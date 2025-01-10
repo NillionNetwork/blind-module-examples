@@ -1,0 +1,20 @@
+# Streamlit app files
+.streamlit/secrets.toml
+.streamlit/credentials.csv
+.streamlit/encrypted_data/
+
+# Python files
+pycache/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Streamlit cache
+streamlit/cache/
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+venv/

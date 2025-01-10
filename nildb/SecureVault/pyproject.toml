@@ -1,0 +1,11 @@
+[project]
+name = "securecredentialsvault"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.11"
+dependencies = [
+    "nilql>=0.0.0a2",
+    "pandas>=2.2.3",
+    "requests>=2.32.3",
+    "streamlit>=1.41.1",
+]
