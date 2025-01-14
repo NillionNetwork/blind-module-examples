@@ -21,6 +21,6 @@ export const NODE_CONFIG = {
   },
 } as const;
 
-export const NUM_NODES = 3;
+export const NUM_NODES = process.env.NUM_NODES;
 
 export const SCHEMA_ID = process.env.SCHEMA_ID;

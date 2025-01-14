@@ -18,7 +18,7 @@ async function initializeServices() {
 
   if (!encryptionInstance) {
     encryptionInstance = await createEncryptionService({
-      nodes: NUM_NODES,
+      nodes: Number(NUM_NODES),
       operations: { store: true },
     });
   }

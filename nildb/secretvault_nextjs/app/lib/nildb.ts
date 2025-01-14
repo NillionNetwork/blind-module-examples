@@ -67,7 +67,7 @@ export const createNilDBAPI = (config = NODE_CONFIG) => {
         },
         body: JSON.stringify({
           schema,
-          filter: service ? { service } : {},
+          filter: {},
         }),
       });
 
