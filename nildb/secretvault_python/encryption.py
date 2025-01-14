@@ -16,8 +16,6 @@ class CredentialEncryption:
             encoded_shares = []
             
             for i in range(self.num_nodes):
-                # temp commented out until the upgrade
-                # encoded_share = base64.b64encode(encrypted_shares[i]).decode('utf-8')
                 encoded_shares.append(encrypted_shares[i])
 
             print('encoded_shares', encoded_shares)
@@ -30,8 +28,6 @@ class CredentialEncryption:
         try:
             decoded_shares = []
             for share in encoded_shares:
-                # temp commented out until the upgrade
-                # decoded_share = base64.b64decode(share)
                 decoded_shares.append(share)
                 
             return nilql.decrypt(self.secret_key, decoded_shares)
