@@ -1,5 +1,5 @@
 
-nilql>=0.0.0a2
+nilql>=0.0.0a5
 pandas>=2.2.3
 requests>=2.32.3
 streamlit>=1.41.1

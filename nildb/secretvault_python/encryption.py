@@ -6,7 +6,7 @@ from typing import List, Tuple, Dict
 class CredentialEncryption:
     def __init__(self, num_nodes: int):
         self.num_nodes = num_nodes
-        self.secret_key = nilql.secret_key({'nodes': [{}] * num_nodes}, {'store': True})
+        self.secret_key = nilql.SecretKey.generate({'nodes': [{}] * num_nodes},{'store': True})
 
     def encrypt_password(self, password: str) -> List[str]:
         """Encrypt password using secret sharing."""
