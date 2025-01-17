@@ -6,19 +6,19 @@ from typing import Dict, List
 
 from config import NODE_CONFIG, SCHEMA_ID, NUM_NODES
 from nildb_api import NilDBAPI
-from encryption import CredentialEncryption
+from encryption import DataEncryption
 
 # Initialize services
 nildb_api = NilDBAPI(NODE_CONFIG)
-encryption = CredentialEncryption(NUM_NODES)
+encryption = DataEncryption(NUM_NODES)
 
 def init_session_state():
     """Initialize session state variables."""
     if 'credentials' not in st.session_state:
         st.session_state.credentials = []
 
-def create_credential(username: str, password: str, service: str) -> bool:
-    """Create and store encrypted credential across nodes."""
+def upload_credentials(username: str, password: str, service: str) -> bool:
+    """Create and store encrypted credentials across nodes."""
     try:
         # Generate unique ID
         cred_id = str(uuid.uuid4())        
@@ -28,22 +28,19 @@ def create_credential(username: str, password: str, service: str) -> bool:
         # Store shares across nodes
         success = True
         for i, node_name in enumerate(['node_a', 'node_b', 'node_c']):
-            credential_data = {
-                "schema": SCHEMA_ID,
-                "data": {
+            credentials_data = {
                     "_id": cred_id,
                     "username": username,
                     "password": encrypted_shares[i],
                     "service": service
-                }
             }
-            if not nildb_api.create_credential(node_name, credential_data):
+            if not nildb_api.data_upload(node_name, SCHEMA_ID, [credentials_data]):
                 success = False
                 break
                 
         return success
     except Exception as e:
-        st.error(f"Error creating credential: {str(e)}")
+        st.error(f"Error creating credentials: {str(e)}")
         return False
 
 def fetch_credentials() -> List[Dict]:
@@ -52,7 +49,7 @@ def fetch_credentials() -> List[Dict]:
         # Fetch from all nodes
         credentials = {}
         for node_name in ['node_a', 'node_b', 'node_c']:
-            node_creds = nildb_api.read_credentials(node_name, SCHEMA_ID)
+            node_creds = nildb_api.data_read(node_name, SCHEMA_ID)
             print('node_creds', node_creds)
             for cred in node_creds:
                 cred_id = cred['_id']
@@ -64,7 +61,7 @@ def fetch_credentials() -> List[Dict]:
                     }
                 credentials[cred_id]['shares'].append(cred['password'])
         
-        # Decrypt passwords
+        # Decrypt password
         decrypted_creds = []
         for cred_id, cred_data in credentials.items():
             if len(cred_data['shares']) == NUM_NODES:
@@ -76,7 +73,7 @@ def fetch_credentials() -> List[Dict]:
                         'Password': password
                     })
                 except Exception as e:
-                    st.warning(f"Could not decrypt credential {cred_id}: {str(e)}")
+                    st.warning(f"Could not decrypt credentials {cred_id}: {str(e)}")
                     
         return decrypted_creds
     except Exception as e:
@@ -84,26 +81,25 @@ def fetch_credentials() -> List[Dict]:
         return []
 
 def main():
-    st.set_page_config(page_title="Secure Credential Manager", layout="wide")
+    st.set_page_config(page_title="Secure Credentials Manager", layout="wide")
     init_session_state()
-
-    st.title("🔐 Secure Credential Manager")
+    st.title("🔐 Secure Credentials Manager")
     
     # Credential Input Form
-    st.header("Add New Credential")
+    st.header("Add New Credentials")
     with st.form("credential_form"):
         service = st.text_input("Service Name", placeholder="e.g., Netflix")
         username = st.text_input("Username", placeholder="Enter your username")
         password = st.text_input("Password", type="password")
         
-        submitted = st.form_submit_button("Save Credential")
+        submitted = st.form_submit_button("Save Credentials")
         if submitted:
             if not all([service, username, password]):
                 st.error("Please fill in all fields")
             else:
-                with st.spinner("Encrypting and storing credential..."):
-                    if create_credential(username, password, service):
-                        st.success("Credential saved successfully!")
+                with st.spinner("Encrypting and storing credentials..."):
+                    if upload_credentials(username, password, service):
+                        st.success("Credentials saved successfully!")
                     else:
                         st.error("Failed to save credential")
 

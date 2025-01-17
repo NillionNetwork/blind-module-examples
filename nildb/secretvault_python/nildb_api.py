@@ -1,14 +1,13 @@
-"""NilDB API integration for credential management."""
+"""NilDB API integration"""
 import requests
-import json
 from typing import Dict, List, Optional
 
 class NilDBAPI:
     def __init__(self, node_config: Dict):
         self.nodes = node_config
     
-    def create_credential(self, node_name: str, credential_data: Dict) -> bool:
-        """Create a credential entry in the specified node."""
+    def data_upload(self, node_name: str, schema_id: str, payload: list) -> bool:
+        """Create/upload records in the specified node and schema."""
         try:
             node = self.nodes[node_name]
             headers = {
@@ -16,24 +15,24 @@ class NilDBAPI:
                 'Content-Type': 'application/json'
             }
             
-            payload = {
-                "schema": credential_data["schema"],
-                "data": [credential_data["data"]]
+            body = {
+                "schema": schema_id,
+                "data": payload
             }
             
             response = requests.post(
                 f"{node['url']}/data/create",
                 headers=headers,
-                json=payload
+                json=body
             )
             
-            return response.status_code == 200
+            return response.status_code == 200 and response.json().get("data", {}).get("errors", []) == []
         except Exception as e:
-            print(f"Error creating credential in {node_name}: {str(e)}")
+            print(f"Error creating records in {node_name}: {str(e)}")
             return False
 
-    def read_credentials(self, node_name: str, schema: str, service: Optional[str] = None) -> List[Dict]:
-        """Read credentials from the specified node."""
+    def data_read(self, node_name: str, schema_id: str, filter_dict: Optional[dict] = None) -> List[Dict]:
+        """Read data from the specified node and schema."""
         try:
             node = self.nodes[node_name]
             headers = {
@@ -41,20 +40,47 @@ class NilDBAPI:
                 'Content-Type': 'application/json'
             }
             
-            payload = {
-                "schema": schema,
-                "filter": {"service": service} if service else {}
+            body = {
+                "schema": schema_id,
+                "filter": filter_dict if filter_dict is not None else {}
             }
             
             response = requests.post(
                 f"{node['url']}/data/read",
                 headers=headers,
-                json=payload
+                json=body
             )
             
             if response.status_code == 200:
                 return response.json().get("data", [])
             return []
         except Exception as e:
-            print(f"Error reading credentials from {node_name}: {str(e)}")
+            print(f"Error reading data from {node_name}: {str(e)}")
+            return []
+
+    def query_execute(self, node_name: str, query_id: str, variables: Optional[dict] = None) -> List[Dict]:
+        """Execute a query on the specified node with advanced filtering."""
+        try:
+            node = self.nodes[node_name]
+            headers = {
+                'Authorization': f'Bearer {node["jwt"]}',
+                'Content-Type': 'application/json'
+            }
+
+            payload = {
+                "id": query_id,
+                "variables": variables if variables is not None else {}
+            }
+
+            response = requests.post(
+                f"{node['url']}/queries/execute",
+                headers=headers,
+                json=payload
+            )
+
+            if response.status_code == 200:
+                return response.json().get("data", [])
+            return []
+        except Exception as e:
+            print(f"Error executing query on {node_name}: {str(e)}")
             return []
