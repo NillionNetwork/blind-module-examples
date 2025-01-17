@@ -1,9 +1,8 @@
 """Encryption utilities using nilql for secret sharing."""
-import base64
 import nilql
-from typing import List, Tuple, Dict
+from typing import List
 
-class CredentialEncryption:
+class DataEncryption:
     def __init__(self, num_nodes: int):
         self.num_nodes = num_nodes
         self.secret_key = nilql.SecretKey.generate({'nodes': [{}] * num_nodes},{'store': True})
@@ -12,14 +11,8 @@ class CredentialEncryption:
         """Encrypt password using secret sharing."""
         try:
             encrypted_shares = nilql.encrypt(self.secret_key, password)
-            print('encrypted_shares', encrypted_shares)
-            encoded_shares = []
-            
-            for i in range(self.num_nodes):
-                encoded_shares.append(encrypted_shares[i])
 
-            print('encoded_shares', encoded_shares)
-            return encoded_shares
+            return list(encrypted_shares)
         except Exception as e:
             raise Exception(f"Encryption failed: {str(e)}")
 
@@ -30,6 +23,6 @@ class CredentialEncryption:
             for share in encoded_shares:
                 decoded_shares.append(share)
                 
-            return nilql.decrypt(self.secret_key, decoded_shares)
+            return str(nilql.decrypt(self.secret_key, decoded_shares))
         except Exception as e:
             raise Exception(f"Decryption failed: {str(e)}")
