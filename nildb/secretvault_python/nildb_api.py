@@ -84,3 +84,49 @@ class NilDBAPI:
         except Exception as e:
             print(f"Error executing query on {node_name}: {str(e)}")
             return []
+
+    def create_schema(node_urls: list = None, node_jwts: list = None, payload: dict = None) -> None:
+        """Create a schema in the specified nodes."""
+        for i, (url, jwt) in enumerate(zip(node_urls, node_jwts)):
+            try:
+                headers = {
+                    'Authorization': f'Bearer {jwt}',
+                    'Content-Type': 'application/json'
+                }
+
+                response = requests.post(
+                    f"{url}/schemas",
+                    headers=headers,
+                    json=payload if payload is not None else {}
+                )
+
+                if response.status_code == 200:
+                    print(f"Schema created successfully in {url}.")
+                else:
+                    print(f"Failed to create schema in {url}: {response.status_code} {response.text}")
+
+            except Exception as e:
+                print(f"Error creating schema in {url}: {str(e)}")
+
+    def create_query(node_urls: list = None, node_jwts: list = None, payload: dict = {}) -> None:
+        """Create a query in the specified nodes."""
+        for i, (url, jwt) in enumerate(zip(node_urls, node_jwts)):
+            try:
+                headers = {
+                    'Authorization': f'Bearer {jwt}',
+                    'Content-Type': 'application/json'
+                }
+
+                response = requests.post(
+                    f"{url}/queries",
+                    headers=headers,
+                    json=payload if payload is not None else {}
+                )
+
+                if response.status_code == 200:
+                    print(f"Query created successfully in {url}.")
+                else:
+                    print(f"Failed to create query in {url}: {response.status_code} {response.text}")
+
+            except Exception as e:
+                print(f"Error creating query in {url}: {str(e)}")
