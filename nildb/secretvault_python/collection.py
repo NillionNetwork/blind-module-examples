@@ -1,4 +1,4 @@
-from config import NODE_CONFIG, SCHEMA_ID, ORG_DID
+from config import NODE_CONFIG, SCHEMA_ID
 from nildb_api import NilDBAPI
 
 # Initialize services
@@ -12,7 +12,6 @@ def define_collection(schema: dict) -> bool:
         for i, node_name in enumerate(['node_a', 'node_b', 'node_c']):
             payload = {
                 "_id": SCHEMA_ID,
-                "owner": ORG_DID,
                 "name": "My Data",
                 "keys": [
                     "_id"
@@ -29,7 +28,7 @@ def define_collection(schema: dict) -> bool:
         return False
 
 if __name__ == "__main__":
-    # define the schema
+    # Define the schema
     credentials_schema = {
         "$schema": "http://json-schema.org/draft-07/schema#",
         "type": "array",

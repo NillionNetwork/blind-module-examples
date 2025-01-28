@@ -38,5 +38,5 @@ def create_jwt(secret_key: str = None,
 if __name__ == "__main__":
     secret_key = ORG_SECRET_KEY
     org_did = ORG_DID
-    node_ids = [node['url'] for node in NODE_CONFIG.values()]
+    node_ids = [node['did'] for node in NODE_CONFIG.values()]
     create_jwt(secret_key, org_did, node_ids)
