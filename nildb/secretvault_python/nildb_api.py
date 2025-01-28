@@ -99,7 +99,7 @@ class NilDBAPI:
                 json=payload if payload is not None else {}
             )
 
-            if response.status_code == 200:
+            if response.status_code == 200 and response.json().get("errors", []) == []:
                 print(f"Schema created successfully on {node_name}.")
                 return response.json().get("data", [])
             else:
