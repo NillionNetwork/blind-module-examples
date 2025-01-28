@@ -21,5 +21,11 @@ NODE_CONFIG = {
 # Schema ID for credential storage
 SCHEMA_ID = st.secrets["schema_id"]
 
+# Org DID for defining collections
+ORG_DID = st.secrets["org_did"]
+
+# Org DID for defining collections
+ORG_SECRET_KEY = st.secrets["org_secret_key"]
+
 # Number of nodes for secret sharing
-NUM_NODES = st.secrets["num_nodes"]
+NUM_NODES = len(NODE_CONFIG)

@@ -1,6 +1,7 @@
 import jwt
 import time
 from ecdsa import SigningKey, SECP256k1
+from config import NODE_CONFIG, ORG_DID, ORG_SECRET_KEY
 
 def create_jwt(secret_key: str = None,
                org_did: str = None,
@@ -35,11 +36,7 @@ def create_jwt(secret_key: str = None,
     return tokens
 
 if __name__ == "__main__":
-    secret_key = "XXX"
-    org_did = "XXX"
-    node_ids = [
-        "XXX",
-        "XXX",
-        "XXX"
-    ]
+    secret_key = ORG_SECRET_KEY
+    org_did = ORG_DID
+    node_ids = [node['url'] for node in NODE_CONFIG.values()]
     create_jwt(secret_key, org_did, node_ids)

@@ -1,4 +1,6 @@
+ecdsa>=0.19.0
 nilql>=0.0.0a5
 pandas>=2.2.3
+PyJWT>=2.3.0
 requests>=2.32.3
 streamlit>=1.41.1
