@@ -1,4 +1,4 @@
-# Secret Vault
+# Secure Credential Manager app using SecretVault
 
 <img width="1316" alt="image" src="https://github.com/user-attachments/assets/f7fc394e-a881-46c6-82df-4165d92e859d" />
 
