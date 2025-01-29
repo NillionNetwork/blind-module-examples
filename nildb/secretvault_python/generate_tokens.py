@@ -31,12 +31,27 @@ def create_jwt(secret_key: str = None,
             algorithm="ES256K"
         )
         tokens.append(token)
-        print(f"Generated JWT for {node_id}: {token}")
     
     return tokens
+
+def update_config() -> None:
+    """
+    Update the cluster config with short-lived JWTs
+    """
+    # Create tokens for the nodes with 60s TTL
+    tokens = create_jwt(ORG_SECRET_KEY, ORG_DID, [node["did"] for node in NODE_CONFIG.values()], 60)
+    for node, token in zip(NODE_CONFIG.values(), tokens):
+        node["jwt"] = token
+
 
 if __name__ == "__main__":
     secret_key = ORG_SECRET_KEY
     org_did = ORG_DID
     node_ids = [node['did'] for node in NODE_CONFIG.values()]
-    create_jwt(secret_key, org_did, node_ids)
+
+    # generate the tokens
+    tokens = create_jwt(secret_key, org_did, node_ids)
+
+    # print the generated tokens
+    for node_id, token in zip(node_ids, tokens):
+        print(f"JWT for {node_id}: {token}")

@@ -5,6 +5,7 @@ import pandas as pd
 from typing import Dict, List
 
 from config import NODE_CONFIG, SCHEMA_ID, NUM_NODES
+import generate_tokens
 from nildb_api import NilDBAPI
 from encryption import DataEncryption
 
@@ -98,6 +99,8 @@ def main():
                 st.error("Please fill in all fields")
             else:
                 with st.spinner("Encrypting and storing credentials..."):
+                    # generate short-lived JTWs
+                    generate_tokens.update_config()
                     if upload_credentials(username, password, service):
                         st.success("Credentials saved successfully!")
                     else:
@@ -107,6 +110,8 @@ def main():
     st.header("Stored Credentials")
     if st.button("Refresh Credentials"):
         with st.spinner("Fetching and decrypting credentials..."):
+            # generate short-lived JTWs
+            generate_tokens.update_config()
             credentials = fetch_credentials()
             # print('credentials', credentials)
             if credentials:
