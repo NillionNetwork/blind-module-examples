@@ -5,18 +5,15 @@ import streamlit as st
 NODE_CONFIG = {
     'node_a': {
         'url': st.secrets["node_a"]["url"],
-        'did': st.secrets["node_a"]["did"],
-        'jwt': st.secrets["node_a"]["jwt"],
+        'did': st.secrets["node_a"]["did"]
     },
     'node_b': {
         'url': st.secrets["node_b"]["url"],
-        'did': st.secrets["node_b"]["did"],
-        'jwt': st.secrets["node_b"]["jwt"],
+        'did': st.secrets["node_b"]["did"]
     },
     'node_c': {
         'url': st.secrets["node_c"]["url"],
-        'did': st.secrets["node_c"]["did"],
-        'jwt': st.secrets["node_c"]["jwt"],
+        'did': st.secrets["node_c"]["did"]
     },
 }
 
