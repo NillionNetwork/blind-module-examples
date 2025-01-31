@@ -6,4 +6,4 @@ Examples of nil Products
 - Secure Credentials Manager [(python)](https://github.com/NillionNetwork/nil-examples/tree/main/nildb/secretvault_python)
 
 ## nilAI
-- Private AI Chat [(nextjs)](https://github.com/NillionNetwork/blind-module-examples/tree/main/nilai/secretllm_nextjs)
+- Private AI LLM Chat [(nextjs)](https://github.com/NillionNetwork/blind-module-examples/tree/main/nilai/secretllm_nextjs)
