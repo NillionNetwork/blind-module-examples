@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@nillion/nilql": "0.0.0-alpha.5",
+    "@nillion/nilql": "0.0.0-alpha.8",
     "jsonwebtoken": "^9.0.2",
     "next": "14.2.6",
     "react": "^18",
