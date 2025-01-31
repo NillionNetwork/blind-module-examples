@@ -8,6 +8,7 @@ export interface Credential {
   username: string;
   password: string;
   service: string;
+  registered_at: string;
 }
 
 interface CredentialPayload {
@@ -28,7 +29,7 @@ export const createNilDBAPI = (config = NODE_CONFIG) => {
     const node = config[nodeName];
 
     try {
-      const response = await fetch(`${node.url}/data/create`, {
+      const response = await fetch(`${node.url}/api/v1/data/create`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${node.jwt}`,
@@ -59,7 +60,7 @@ export const createNilDBAPI = (config = NODE_CONFIG) => {
     const node = config[nodeName];
 
     try {
-      const response = await fetch(`${node.url}/data/read`, {
+      const response = await fetch(`${node.url}/api/v1/data/read`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${node.jwt}`,
