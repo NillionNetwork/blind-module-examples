@@ -53,6 +53,7 @@ export async function POST(request: NextRequest) {
             username: body.username,
             password: encryptedShares[index],
             service: body.service,
+            registered_at: body.registered_at,
           },
         })
       )
