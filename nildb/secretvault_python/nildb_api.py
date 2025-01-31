@@ -25,7 +25,7 @@ class NilDBAPI:
                 headers=headers,
                 json=body
             )
-            
+
             return response.status_code == 200 and response.json().get("data", {}).get("errors", []) == []
         except Exception as e:
             print(f"Error creating records in {node_name}: {str(e)}")
@@ -50,7 +50,7 @@ class NilDBAPI:
                 headers=headers,
                 json=body
             )
-            
+
             if response.status_code == 200:
                 return response.json().get("data", [])
             return []
@@ -126,6 +126,7 @@ class NilDBAPI:
             )
 
             if response.status_code == 200:
+                print(f"Query created successfully on {node_name}.")
                 return response.json().get("data", [])
             else:
                 print(f"Failed to create query in {node_name}: {response.status_code} {response.text}")

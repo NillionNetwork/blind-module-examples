@@ -1,16 +1,17 @@
 """Encryption utilities using nilql for secret sharing."""
 import nilql
-from typing import List
+from typing import List, Sequence
+
 
 class DataEncryption:
     def __init__(self, num_nodes: int):
         self.num_nodes = num_nodes
-        self.secret_key = nilql.ClusterKey.generate({'nodes': [{}] * num_nodes},{'store': True})
+        self.secret_key = nilql.ClusterKey.generate({'nodes': [{}] * num_nodes},{'sum': True})
 
-    def encrypt_password(self, password: str) -> List[str]:
+    def encrypt_password(self, password: int) -> List[int]:
         """Encrypt password using secret sharing."""
         try:
-            encrypted_shares = nilql.encrypt(self.secret_key, password)
+            encrypted_shares: Sequence[int] = nilql.encrypt(self.secret_key, password)
 
             return list(encrypted_shares)
         except Exception as e:

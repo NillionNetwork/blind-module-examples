@@ -20,6 +20,9 @@ NODE_CONFIG = {
 # Schema ID for credential storage
 SCHEMA_ID = st.secrets["schema_id"]
 
+# Schema ID for credential storage
+QUERY_ID = st.secrets["query_id"]
+
 # Org DID
 ORG_DID = st.secrets["org_did"]
 

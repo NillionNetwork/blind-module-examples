@@ -13,8 +13,14 @@
                 "type": "string"
             },
             "password": {
-                "type": "string"
-            },
+                "type": "object",
+                "properties": {
+                  "$share": {
+                    "type": "integer"
+                  }
+                },
+                "required": ["$share"]
+              },
             "service": {
                 "type": "string"
             }

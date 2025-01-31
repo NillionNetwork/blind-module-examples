@@ -4,7 +4,7 @@ import uuid
 import pandas as pd
 from typing import Dict, List
 
-from config import NODE_CONFIG, SCHEMA_ID, NUM_NODES
+from config import NODE_CONFIG, SCHEMA_ID, NUM_NODES, QUERY_ID
 import generate_tokens
 from nildb_api import NilDBAPI
 from encryption import DataEncryption
@@ -18,7 +18,7 @@ def init_session_state():
     if 'credentials' not in st.session_state:
         st.session_state.credentials = []
 
-def upload_credentials(username: str, password: str, service: str) -> bool:
+def upload_credentials(username: str, password: int, service: str) -> bool:
     """Create and store encrypted credentials across nodes."""
     try:
         # Generate unique ID
@@ -32,7 +32,7 @@ def upload_credentials(username: str, password: str, service: str) -> bool:
             credentials_data = {
                     "_id": cred_id,
                     "username": username,
-                    "password": encrypted_shares[i],
+                    "password": {"$share": encrypted_shares[i]},
                     "service": service
             }
             if not nildb_api.data_upload(node_name, SCHEMA_ID, [credentials_data]):
@@ -51,7 +51,7 @@ def fetch_credentials() -> List[Dict]:
         credentials = {}
         for node_name in ['node_a', 'node_b', 'node_c']:
             node_creds = nildb_api.data_read(node_name, SCHEMA_ID)
-            print('node_creds', node_creds)
+            # print('node_creds', node_creds)
             for cred in node_creds:
                 cred_id = cred['_id']
                 if cred_id not in credentials:
@@ -60,7 +60,7 @@ def fetch_credentials() -> List[Dict]:
                         'service': cred['service'],
                         'shares': []
                     }
-                credentials[cred_id]['shares'].append(cred['password'])
+                credentials[cred_id]['shares'].append(cred['password']["$share"])
         
         # Decrypt password
         decrypted_creds = []
@@ -81,6 +81,30 @@ def fetch_credentials() -> List[Dict]:
         st.error(f"Error fetching credentials: {str(e)}")
         return []
 
+
+def fetch_password_sum() -> List[Dict]:
+    """Fetch and decrypt credentials from nodes."""
+    try:
+        # Fetch from all nodes
+        results = []
+        for node_name in ['node_a', 'node_b', 'node_c']:
+            result = nildb_api.query_execute(node_name, QUERY_ID)
+            results.append(result[0]["result"])
+        print("result chunks", results)
+        # Decrypt password
+        decrypted_result = []
+        if len(results) == NUM_NODES:
+            try:
+                decrypted_result = encryption.decrypt_password(results)
+            except Exception as e:
+                st.warning(f"Could not decrypt result: {str(e)}")
+
+
+        return decrypted_result
+    except Exception as e:
+        st.error(f"Error fetching credentials: {str(e)}")
+        return []
+
 def main():
     st.set_page_config(page_title="Secure Credentials Manager", layout="wide")
     init_session_state()
@@ -92,7 +116,7 @@ def main():
         service = st.text_input("Service Name", placeholder="e.g., Netflix")
         username = st.text_input("Username", placeholder="Enter your username")
         password = st.text_input("Password", type="password")
-        
+
         submitted = st.form_submit_button("Save Credentials")
         if submitted:
             if not all([service, username, password]):
@@ -101,24 +125,42 @@ def main():
                 with st.spinner("Encrypting and storing credentials..."):
                     # generate short-lived JTWs
                     generate_tokens.update_config()
-                    if upload_credentials(username, password, service):
+                    if upload_credentials(username, int(password), service):
                         st.success("Credentials saved successfully!")
                     else:
                         st.error("Failed to save credential")
 
     # View Credentials
     st.header("Stored Credentials")
+    # Ensure session state has credentials stored
+    if "credentials" not in st.session_state:
+        st.session_state.credentials = None  # Initialize as None
+
+    # Button to refresh credentials
     if st.button("Refresh Credentials"):
+        with st.spinner("Fetching and decrypting credentials..."):
+            generate_tokens.update_config()
+            st.session_state.credentials = fetch_credentials()  # Store in session state
+
+    # Display credentials if they exist
+    if st.session_state.credentials:
+        df = pd.DataFrame(st.session_state.credentials)
+        st.dataframe(df, use_container_width=True)
+    else:
+        st.info("No credentials found")
+
+    # View Credentials
+    st.header("Password Sum!?!")
+    if st.button("Refresh Password Sum"):
         with st.spinner("Fetching and decrypting credentials..."):
             # generate short-lived JTWs
             generate_tokens.update_config()
-            credentials = fetch_credentials()
-            # print('credentials', credentials)
-            if credentials:
-                df = pd.DataFrame(credentials)
-                st.dataframe(df, use_container_width=True)
+            result = fetch_password_sum()
+            # print('result', result)
+            if result:
+                st.info(f"Sum of all passwords: {result}")
             else:
-                st.info("No credentials found")
+                st.info("No result found")
 
 if __name__ == "__main__":
     main()
