@@ -13,7 +13,7 @@ These examples demonstrate how to
 1. Create a .env
 
 ```
-cp .env .env.example
+cp .env.example .env 
 ```
 
 2. Decide which Nillion Network to connect to. Update NILLION_NETWORK in .env accordingly
