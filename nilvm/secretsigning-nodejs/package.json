@@ -1,0 +1,11 @@
+{
+  "name": "js-signatures",
+  "version": "1.0.0",
+  "type": "module",
+  "dependencies": {
+    "@cosmjs/proto-signing": "^0.33.0",
+    "@nillion/client-vms": "0.3.0-rc.3",
+    "@nillion/client-wasm": "0.3.0-rc.2",
+    "dotenv": "^16.4.7"
+  }
+}
