@@ -4,8 +4,8 @@
   "type": "module",
   "dependencies": {
     "@cosmjs/proto-signing": "^0.33.0",
-    "@nillion/client-vms": "0.3.0-rc.3",
-    "@nillion/client-wasm": "0.3.0-rc.2",
+    "@nillion/client-vms": "0.3.0-rc.5",
+    "@nillion/client-wasm": "0.3.0-rc.4",
     "dotenv": "^16.4.7"
   }
 }
