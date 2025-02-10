@@ -1,8 +1,22 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Chat with the Blind Computer 💻
+
+This is a [Next.js](https://nextjs.org/) app demoing a private chat flow with SecretLLM.
 
 ## Getting Started
 
-First, run the development server:
+Setup .env with your nilAI API key.
+
+```
+cp .env.example .env
+```
+
+Install project dependencies
+
+```
+npm i
+```
+
+Run the development server:
 
 ```bash
 npm run dev

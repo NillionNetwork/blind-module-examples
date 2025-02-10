@@ -13,7 +13,7 @@ export async function POST(req: Request) {
           Authorization: `Bearer ${process.env.NILAI_API_KEY}`,
         },
         body: JSON.stringify({
-          model: 'Llama-3.2-1B-Instruct',
+          model: 'meta-llama/Llama-3.1-8B-Instruct',
           messages: body.messages,
           temperature: 0.2,
         }),
