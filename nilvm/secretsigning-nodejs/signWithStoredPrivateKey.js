@@ -18,10 +18,10 @@ import {
 import { toBigInt } from './helpers.js';
 
 // Replace this with the store ID of your permissioned private key
-const storeId = 'eab372e8-b384-4517-a07f-78ce96cb8c7e';
+const storeId = 'ecad4cb7-c235-41f9-9fbc-1c7e72a17a51';
 const messageToSign = 'A super secret message!';
 const publicKey =
-  '032cf58cf380ac9c2c9ad80283520917082600abddba776464c65db54bd7430251';
+  '02581e4efbd50327c14efca1832148a3247944b271a3519061a94f3b561322b96a';
 
 export async function signWithStoredPrivateKey(
   storeId,
@@ -37,7 +37,7 @@ export async function signWithStoredPrivateKey(
   const clientBuilder = new VmClientBuilder();
   clientBuilder
     .seed(NILLION_USER_KEY_SEED)
-    .bootnodeUrl(networkConfig.NILLION_GRPC_ENDPOINT)
+    .bootnodeUrl(networkConfig.NILLION_NILVM_GRPC_ENDPOINT)
     .chainUrl(networkConfig.NILLION_NILCHAIN_JSON_RPC)
     .signer(signer);
 
@@ -80,6 +80,11 @@ export async function signWithStoredPrivateKey(
       publicKey
     );
     console.log('Verified signature:', verifiedSignature);
+    if (!verifiedSignature) {
+      throw new Error(
+        'Signature verification failed - double check that the public key of the signer corresponds to the private key stored in Nillion'
+      );
+    }
   } else {
     console.log(
       'Cannot verify signature because the public key was not provided'
