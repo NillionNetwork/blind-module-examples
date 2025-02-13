@@ -7,6 +7,7 @@ Examples of nil Products
 
 ## nilAI
 - Private AI LLM Chat [(nextjs)](https://github.com/NillionNetwork/blind-module-examples/tree/main/nilai/secretllm_nextjs)
+- Private AI LLM Chat [(nodejs)](https://github.com/NillionNetwork/blind-module-examples/tree/main/nilai/secretllm_nodejs)
 
 ## nilVM
 - SecretSigning example [(nodejs)](https://github.com/NillionNetwork/blind-module-examples/tree/main/nilvm/secretsigning-nodejs)
