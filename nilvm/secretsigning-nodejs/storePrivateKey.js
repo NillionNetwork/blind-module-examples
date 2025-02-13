@@ -27,7 +27,7 @@ export async function storePrivateKeyInNillion(privateKey = null) {
   const clientBuilder = new VmClientBuilder();
   clientBuilder
     .seed(NILLION_USER_KEY_SEED)
-    .bootnodeUrl(networkConfig.NILLION_GRPC_ENDPOINT)
+    .bootnodeUrl(networkConfig.NILLION_NILVM_GRPC_ENDPOINT)
     .chainUrl(networkConfig.NILLION_NILCHAIN_JSON_RPC)
     .signer(signer);
 

@@ -7,7 +7,7 @@ import {
 import { tecdsaKeyName } from './nillionSignatureConstants.js';
 
 // Replace this with the store ID of your permissioned private key
-const storeId = 'eab372e8-b384-4517-a07f-78ce96cb8c7e';
+const storeId = 'ecad4cb7-c235-41f9-9fbc-1c7e72a17a51';
 
 export async function retrievePrivateKey(storeId) {
   console.log('Retrieving private key for store ID:', storeId);
@@ -18,7 +18,7 @@ export async function retrievePrivateKey(storeId) {
   const clientBuilder = new VmClientBuilder();
   clientBuilder
     .seed(NILLION_USER_KEY_SEED)
-    .bootnodeUrl(networkConfig.NILLION_GRPC_ENDPOINT)
+    .bootnodeUrl(networkConfig.NILLION_NILVM_GRPC_ENDPOINT)
     .chainUrl(networkConfig.NILLION_NILCHAIN_JSON_RPC)
     .signer(signer);
 
