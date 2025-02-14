@@ -1,0 +1,6 @@
+[tool.poetry]
+allow-prereleases = true
+
+[tool.poetry.dependencies]
+siwe = "^2.1.0"
+pydantic = "^2.0.0"

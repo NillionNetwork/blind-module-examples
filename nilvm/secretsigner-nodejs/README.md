@@ -1,4 +1,4 @@
-# Nillion SecretSigning Examples
+# Nillion SecretSigner Examples
 
 These examples demonstrate how to
 
