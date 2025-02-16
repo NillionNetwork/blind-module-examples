@@ -1,5 +1,4 @@
 import { secp256k1 } from "@noble/curves/secp256k1";
-import { DirectSecp256k1Wallet } from "@cosmjs/proto-signing";
 
 /**
  * Generates a random 32-byte private key
@@ -35,20 +34,6 @@ export function getPublicKey(privateKey) {
 export function keyToHex(key) {
 	return Buffer.from(key).toString("hex");
 }
-
-/**
- * Creates a Nilchain signer from a hex string key
- * @param {string} key - The hex string representation of the private key
- * @returns {Promise<DirectSecp256k1Wallet>} The created Nilchain signer
- */
-export const createNilchainSignerFromKey = async (key) => {
-	const NilChainAddressPrefix = "nil";
-	const privateKey = new Uint8Array(key.length / 2);
-	for (let i = 0, j = 0; i < key.length; i += 2, j++) {
-		privateKey[j] = parseInt(key.slice(i, i + 2), 16);
-	}
-	return await DirectSecp256k1Wallet.fromKey(privateKey, NilChainAddressPrefix);
-};
 
 export const toBigInt = (bytes) => {
 	let ret = 0n;
