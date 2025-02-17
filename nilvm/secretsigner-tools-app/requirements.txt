@@ -1,0 +1,13 @@
+streamlit
+cryptography
+eth_utils
+eth-hash[pycryptodome]
+eth-account
+cryptography>=44.0.0
+nillion-client==0.2.0
+nada-dsl
+python-dotenv==1.0.0
+betterproto==2.0.0b7
+beautifulsoup4
+siwe>=2.1.0
+web3>=6.0.0

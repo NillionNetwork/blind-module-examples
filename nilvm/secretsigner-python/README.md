@@ -1,64 +1,51 @@
-# Nillion Signature Tools
-
-### Available Tools:
-
-- **ECDSA Key Generator**: Generate new ECDSA key pairs locally
-- **Store Key In Nillion**: Store your ECDSA private key in Nillion
-- **Retrieve Key from Nillion**: Retrieve your stored ECDSA private key from Nillion
-- **Sign Message with Nillion**: Sign simple or [SIWE](https://login.xyz/) (EIP-4361) messages securely using Nillion's threshold ECDSA via your stored private key
-- **Verify Signature**: Verify the authenticity of signed messages
-- **Transfer ETH**: Transfer ETH from the address corresponding to your stored private key to another address
-- **Other Tools**: Explore additional dev tools that help generate a Nillion user ID from a seed, derive Ethereum addresses, and derive public keys
+# SecretSigner Python Examples
 
 ## Setup
 
-### Prerequisites
+### 1. Install dependencies
 
-- Python 3.8 or higher
-- pip (Python package installer)
-- `nillion-devnet` for local development
-- a [funded Nilchain private key](https://docs.nillion.com/guide-testnet-faucet) for Testnet development
-
-### Installation
-
-1. Clone the repository:
-2. Create and activate a virtual environment:
-   ```bash
-   python3 -m venv .venv
-   source .venv/bin/activate  # On macOS/Linux
-   .venv\Scripts\activate     # On Windows
-   ```
-3. Install the required packages:
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-### Configuration
-
-#### Local Development with nillion-devnet
-
-For local development, simply run `nillion-devnet` and make sure that all .streamlit/sects.toml variables are commented out. Because these aren't present, the app will automatically use your local devnet configuration and payment key.
-
-#### Connecting to Nillion Testnet
-
-To connect to the Nillion testnet:
-
-1. Create a streamlit secrets file:
-
-   ```bash
-   mkdir -p .streamlit
-   cp .streamlit/secrets.example.toml .streamlit/secrets.toml
-   ```
-
-2. Edit `.streamlit/secrets.toml` to add [a valid Nillion Network configuration](https://docs.nillion.com/network-configuration) and a funded Nilchain key
-
-Also add a Base Sepolia enabled Alchemy API Key to the file - alchemy_api_key
-
-### Running the App
-
-Start the local streamlit app:
-
-```bash
-streamlit run app.py
 ```
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+### 2. Create .env
+
+```
+cp .env.example .env
+```
+
+Set your NILLION_NETWORK_CONFIG, NILLION_USER_KEY_SEED, and NILLION_NILCHAIN_PRIVATE_KEY
+
+## Run examples
+
+#### Store a private key
+
+Optionally add the private key you want to store as a parameter, then run:
+
+```
+python3 storePrivateKey.py
+```
+
+The storePrivateKey.py file connects to the Nillion network to securely store an ECDSA private key, either by using an existing key provided as a hex string or by generating a new one if none is supplied. It initializes a client, funds it with UNIL, and stores the private key along with the necessary permissions for signing messages, outputting the store ID and corresponding public key upon completion.
+
+#### Retrieve a private key by store id
+
+**Update the store id within the file, then run:**
+
+```
+python3 storePrivateKey.py
+```
+
+The retrievePrivateKey.py file connects to the Nillion network to retrieve an ECDSA private key associated with a specified store ID. It initializes a client, funds it with UNIL, and then retrieves the private key, along with deriving and printing the corresponding public key for further use.
+
+#### Sign with a stored private key
+
+**Update the store id, associated public key, and message to sign within the file, then run:**
+
+```
+ python3 signWithStoredPrivateKey.py
+```
+
+The signWithStoredPrivateKey.py file is designed to sign a message using a stored private key within the Nillion network. It establishes a connection to the Nillion blockchain, creates a client with a user key, and funds the client with UNIL tokens. The script then hashes the message, sets up the necessary input and output bindings for the signing computation, executes the signing process, retrieves the resulting signature, and verifies it against a provided public key, printing the results at each step.
