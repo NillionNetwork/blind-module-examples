@@ -97,9 +97,6 @@ export default function AIJournal() {
             className='mb-4 bg-white border border-gray-800 rounded-lg shadow-md'
           >
             <div className='p-4 border-b border-gray-300'>
-              <h3 className='text-sm text-gray-600 font-medium'>
-                {/* {format(entry.date, 'MMMM d, yyyy')} */}
-              </h3>
             </div>
             <div className='p-4'>
               <p className='mb-2 text-gray-900'>{entry.content}</p>
