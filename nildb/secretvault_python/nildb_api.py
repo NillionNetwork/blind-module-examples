@@ -1,4 +1,6 @@
 """NilDB API integration"""
+from http import HTTPMethod
+
 import requests
 from typing import Dict, List, Optional
 
@@ -85,7 +87,7 @@ class NilDBAPI:
             print(f"Error executing query on {node_name}: {str(e)}")
             return []
 
-    def create_schema(self, node_name: str, payload: dict = None) -> List[Dict]:
+    def create_schema(self, node_name: str, payload: dict = None) -> bool:
         """Create a schema in the specified node."""
         try:
             node = self.nodes[node_name]
@@ -99,18 +101,18 @@ class NilDBAPI:
                 json=payload if payload is not None else {}
             )
 
-            if response.status_code == 200 and response.json().get("errors", []) == []:
+            if response.ok:
                 print(f"Schema created successfully on {node_name}.")
-                return response.json().get("data", [])
+                return True
             else:
                 print(f"Failed to create schema on {node_name}: {response.status_code} {response.text}")
-                return []
+                return False
 
         except Exception as e:
             print(f"Error creating schema on {node_name}: {str(e)}")
-            return []
+            return False
 
-    def create_query(self, node_name: str, payload: dict = {}) -> List[Dict]:
+    def create_query(self, node_name: str, payload: dict = {}) -> bool:
         """Create a query in the specified node."""
         try:
             node = self.nodes[node_name]
@@ -125,12 +127,13 @@ class NilDBAPI:
                 json=payload if payload is not None else {}
             )
 
-            if response.status_code == 200:
-                return response.json().get("data", [])
+            if response.ok:
+                print(f"Query created successfully on {node_name}.")
+                return True
             else:
                 print(f"Failed to create query in {node_name}: {response.status_code} {response.text}")
-                return []
+                return False
 
         except Exception as e:
             print(f"Error creating query in {node_name}: {str(e)}")
-            return []
+            return False

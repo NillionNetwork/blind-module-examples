@@ -38,14 +38,9 @@ export default function Home() {
         },
       });
 
-      const data = await response.json();
+      console.log('schema creation', response);
+      setSchemaStatus(true);
 
-      if (data.success) {
-        console.log('schema creation', data);
-        setSchemaStatus(true);
-      } else {
-        alert('Error: ' + data.error);
-      }
     } catch (error) {
       alert('Failed to create schema credentials');
       console.error(error);

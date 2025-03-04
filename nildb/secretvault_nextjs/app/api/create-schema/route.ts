@@ -83,17 +83,8 @@ export async function POST() {
           );
         }
 
-        const data = await response.json();
-        if (data.errors && data.errors.length > 0) {
-          throw new Error(
-            `Failed to create schema on ${nodeName}: ${data.errors
-              .map((error: any) => error.message)
-              .join(', ')}`
-          );
-        }
-
         console.log(`Schema created successfully on ${nodeName}.`);
-        return data.data;
+        return process.env.SCHEMA_ID;
       })
     );
 
