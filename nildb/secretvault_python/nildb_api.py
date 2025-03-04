@@ -1,6 +1,4 @@
 """NilDB API integration"""
-from http import HTTPMethod
-
 import requests
 from typing import Dict, List, Optional
 
