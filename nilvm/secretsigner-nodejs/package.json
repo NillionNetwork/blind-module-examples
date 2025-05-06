@@ -6,6 +6,8 @@
     "@cosmjs/proto-signing": "^0.33.0",
     "@nillion/client-vms": "0.3.1",
     "@nillion/client-wasm": "0.3.1",
+    "@noble/curves": "^1.9.0",
+    "@noble/hashes": "^1.8.0",
     "dotenv": "^16.4.7"
   }
 }
