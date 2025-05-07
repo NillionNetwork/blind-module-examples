@@ -1,12 +1,12 @@
-import { VmClientBuilder, createSignerFromKey } from '@nillion/client-vms';
-import { NadaValue } from '@nillion/client-wasm';
-import { sha256 } from '@noble/hashes/sha2';
-import { secp256k1 } from '@noble/curves/secp256k1';
+import { VmClientBuilder, createSignerFromKey } from "@nillion/client-vms";
+import { NadaValue } from "@nillion/client-wasm";
+import { sha256 } from "@noble/hashes/sha2";
+import { secp256k1 } from "@noble/curves/secp256k1";
 import {
   networkConfig,
   NILLION_USER_KEY_SEED,
   NILLION_NILCHAIN_PRIVATE_KEY,
-} from './nillionNetworkConfig.js';
+} from "./nillionNetworkConfig.js";
 import {
   tecdsaProgramId,
   tecdsaKeyParty,
@@ -14,22 +14,23 @@ import {
   tecdsaDigestParty,
   tecdsaDigestName,
   tecdsaSignatureName,
-} from './nillionSignatureConstants.js';
-import { toBigInt } from './helpers.js';
+} from "./nillionSignatureConstants.js";
+import { toBigInt } from "./helpers.js";
 
 // Replace this with the store ID of your permissioned private key
-const storeId = 'ecad4cb7-c235-41f9-9fbc-1c7e72a17a51';
-const messageToSign = 'A super secret message!';
+
+const storeId = "4cde3146-8240-452a-8610-c0a3c8bef6c2";
+const messageToSign = "A super secret message!";
 const publicKey =
-  '02581e4efbd50327c14efca1832148a3247944b271a3519061a94f3b561322b96a';
+  "031e89423e8853c8874dba1de8593e171947d76716ddc34f788341ca55bfc46612";
 
 export async function signWithStoredPrivateKey(
   storeId,
   messageToSign,
   publicKey = null
 ) {
-  console.log('Signing with stored private key from store ID:', storeId);
-  console.log('Message to sign:', messageToSign);
+  console.log("Signing with stored private key from store ID:", storeId);
+  console.log("Message to sign:", messageToSign);
   // Create signer - this is the nilchain account that pays for nillion operations
   const signer = await createSignerFromKey(NILLION_NILCHAIN_PRIVATE_KEY);
 
@@ -59,7 +60,7 @@ export async function signWithStoredPrivateKey(
     .build()
     .invoke();
 
-  console.log(computeResultId);
+  console.log("Compute ResultID:", computeResultId);
 
   const computeResult = await client
     .retrieveComputeResult()
@@ -68,10 +69,12 @@ export async function signWithStoredPrivateKey(
     .invoke();
 
   const signature = computeResult[tecdsaSignatureName]?.value;
-  console.log('Signature:', signature);
 
   const r = toBigInt(signature.r());
   const s = toBigInt(signature.s());
+
+  const sig = new secp256k1.Signature(r, s);
+  console.log("Signature:", sig.toCompactHex());
 
   if (publicKey) {
     const verifiedSignature = secp256k1.verify(
@@ -79,15 +82,15 @@ export async function signWithStoredPrivateKey(
       messageHash,
       publicKey
     );
-    console.log('Verified signature:', verifiedSignature);
+    console.log("Verified signature:", verifiedSignature);
     if (!verifiedSignature) {
       throw new Error(
-        'Signature verification failed - double check that the public key of the signer corresponds to the private key stored in Nillion'
+        "Signature verification failed - double check that the public key of the signer corresponds to the private key stored in Nillion"
       );
     }
   } else {
     console.log(
-      'Cannot verify signature because the public key was not provided'
+      "Cannot verify signature because the public key was not provided"
     );
   }
 }
