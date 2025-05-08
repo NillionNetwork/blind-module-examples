@@ -10,5 +10,6 @@ Examples of nil Products
 - Private AI LLM Chat [(nodejs)](https://github.com/NillionNetwork/blind-module-examples/tree/main/nilai/secretllm_nodejs)
 
 ## nilVM
+- Signature Tools Web App [(tools-app)](https://github.com/NillionNetwork/blind-module-examples/tree/main/nilvm/secretsigner-tools-app)
 - SecretSigner example [(nodejs)](https://github.com/NillionNetwork/blind-module-examples/tree/main/nilvm/secretsigner-nodejs)
 - SecretSigner example [(python)](https://github.com/NillionNetwork/blind-module-examples/tree/main/nilvm/secretsigner-python)
