@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@nillion/nilql':
-        specifier: 0.0.0-alpha.5
-        version: 0.0.0-alpha.5
+        specifier: 0.0.0-alpha.8
+        version: 0.0.0-alpha.8
       did-jwt:
         specifier: ^8.0.8
         version: 8.0.8
@@ -180,8 +180,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@nillion/nilql@0.0.0-alpha.5':
-    resolution: {integrity: sha512-v+P/P4E55TXx8LDrmHK5XWIfQLUpdrsxmCgoG/Dan8KroevDSJ/F1dF+mKyOKS+ba7FFaW9GSpqui0r8KK7l0g==}
+  '@nillion/nilql@0.0.0-alpha.8':
+    resolution: {integrity: sha512-w84eAG2IuoPxp/6UToEqWu+vabEJTGZdEfbN+SglvN5TZ3AdBtGpk8O2J/OQek8339CMPy3rmiSOJcQiW1a6lw==}
     engines: {node: '>=23'}
 
   '@noble/ciphers@1.2.1':
@@ -1782,7 +1782,7 @@ snapshots:
   '@next/swc-win32-x64-msvc@14.2.6':
     optional: true
 
-  '@nillion/nilql@0.0.0-alpha.5':
+  '@nillion/nilql@0.0.0-alpha.8':
     dependencies:
       libsodium-wrappers-sumo: 0.7.15
       paillier-bigint: 3.4.3
