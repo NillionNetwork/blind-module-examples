@@ -20,7 +20,7 @@ export const createEncryptionService = async (config: EncryptionConfig) => {
   };
 
   // Initialize secret key with cluster config and operations
-  const secretKey = await nilql.ClustertKey.generate(cluster, {
+  const secretKey = await nilql.ClusterKey.generate(cluster, {
     store: true,
     ...config.operations,
   });
