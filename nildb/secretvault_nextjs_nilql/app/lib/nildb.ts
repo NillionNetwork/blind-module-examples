@@ -5,10 +5,14 @@ export type NodeName = keyof typeof NODE_CONFIG;
 
 export interface Credential {
   _id: string;
-  username: string;
-  password: string;
+  username: {
+    '%share': string;
+  };
+  password: {
+    '%share': string;
+  };
   service: string;
-  registered_at: string;
+  created_at: string;
 }
 
 interface CredentialPayload {

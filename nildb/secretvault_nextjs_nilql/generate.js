@@ -34,15 +34,14 @@ async function createJwt(secretKey, orgDid, nodeIds, ttl = 3600) {
 }
 
 // Example usage
+// Replace SECRET_KEY and ORG_DID with your own values
 async function main() {
-  const secretKey =
-    'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
-  const orgDid =
-    'did:nil:testnet:nillionXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX';
+  const secretKey = 'did:nil:testnet:nillionXXX';
+  const orgDid = 'XXX';
   const nodeIds = [
-    'did:nil:testnet:nillionXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-    'did:nil:testnet:nillionXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
-    'did:nil:testnet:nillionXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+    'did:nil:testnet:nillion1qfrl8nje3nvwh6cryj63mz2y6gsdptvn07nx8v',
+    'did:nil:testnet:nillion1uak7fgsp69kzfhdd6lfqv69fnzh3lprg2mp3mx',
+    'did:nil:testnet:nillion1kfremrp2mryxrynx66etjl8s7wazxc3rssrugk',
   ];
 
   await createJwt(secretKey, orgDid, nodeIds);
