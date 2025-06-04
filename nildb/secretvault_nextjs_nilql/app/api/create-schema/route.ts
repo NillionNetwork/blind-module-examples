@@ -1,13 +1,15 @@
 import { NODE_CONFIG } from '../../lib/config';
 import { NextResponse } from 'next/server';
+import { v4 as uuidv4 } from 'uuid';
 
 // Remeber to change the SCHEMA_ID to be unique UUID <-- This is what your schema will be
-const testPayload = {
-  _id: process.env.SCHEMA_ID,
-  name: 'My services',
+export const testPayload = {
+  _id: uuidv4(),
+  name: 'password-manager',
   keys: ['_id'],
   schema: {
     $schema: 'http://json-schema.org/draft-07/schema#',
+    title: 'password-manager',
     type: 'array',
     items: {
       type: 'object',
@@ -21,25 +23,35 @@ const testPayload = {
           type: 'string',
         },
         username: {
-          type: 'string',
+          type: 'object',
+          properties: {
+            '%share': {
+              type: 'string',
+            },
+          },
+          required: ['%share'],
         },
         password: {
-          type: 'string',
+          type: 'object',
+          properties: {
+            '%share': {
+              type: 'string',
+            },
+          },
+          required: ['%share'],
         },
-        registered_at: {
+        created_at: {
           type: 'string',
-          format: 'date-time',
-          coerce: true,
         },
       },
-      required: ['_id', 'service', 'username', 'password', 'registered_at'],
-      additionalProperties: false,
+      required: ['_id', 'service', 'username', 'password', 'created_at'],
     },
   },
 };
 
 export async function POST() {
   try {
+    console.log('Starting schema creation process...');
     // Detailed environment variable validation
     for (const [nodeName, config] of Object.entries(NODE_CONFIG)) {
       if (!config.url || config.url.includes('your_node')) {

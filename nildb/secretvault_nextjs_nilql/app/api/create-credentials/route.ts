@@ -29,9 +29,10 @@ async function initializeServices() {
   };
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const { nildb, encryption } = await initializeServices();
+
     const body = await request.json();
 
     if (!body?.username || !body?.password || !body?.service) {
@@ -42,18 +43,27 @@ export async function POST(request: NextRequest) {
     }
 
     const credId = uuidv4();
-    const encryptedShares = await encryption.encryptPassword(body.password);
+    const encryptedUsernameShares = await encryption.encryptPassword(
+      body.username
+    );
+    const encryptedPasswordShares = await encryption.encryptPassword(
+      body.password
+    );
 
     const results = await Promise.all(
       NODES.map((node, index) =>
         nildb.uploadCredential(node, {
           schema: SCHEMA_ID,
           data: {
-            _id: credId,
-            username: body.username,
-            password: encryptedShares[index],
+            _id: uuidv4(),
+            username: {
+              '%share': encryptedUsernameShares[index],
+            },
+            password: {
+              '%share': encryptedPasswordShares[index],
+            },
             service: body.service,
-            registered_at: body.registered_at,
+            created_at: new Date().toISOString(),
           },
         })
       )
