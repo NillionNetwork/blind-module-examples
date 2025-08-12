@@ -42,17 +42,17 @@ export default function ChatComponent({ title, endpoint, description }: ChatComp
   };
 
   return (
-    <div className='flex-1 p-6 border border-gray-200 rounded-lg'>
-      <h2 className='text-2xl font-bold mb-2'>{title}</h2>
-      <p className='text-gray-600 mb-6 text-sm'>{description}</p>
+    <div className='flex-1 p-8 rounded-2xl bg-white text-center shadow-sm hover:shadow-md transition-shadow duration-300'>
+      <h2 className='text-2xl font-bold mb-4 text-black'>{title}</h2>
+      <p className='text-gray-600 mb-8 text-sm max-w-md mx-auto'>{description}</p>
 
-      <form onSubmit={handleSubmit} className='space-y-4'>
+      <form onSubmit={handleSubmit} className='space-y-6 max-w-md mx-auto'>
         <div>
           <textarea
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             placeholder='Ask me anything...'
-            className='w-full p-4 border border-gray-300 rounded-lg resize-none h-32 focus:outline-none focus:ring-2 focus:ring-blue-500 text-black'
+            className='w-full p-4 rounded-xl resize-none h-32 focus:outline-none text-black bg-gray-50 focus:bg-white focus:shadow-sm transition-all duration-200 border border-gray-200'
             disabled={loading}
           />
         </div>
@@ -60,16 +60,16 @@ export default function ChatComponent({ title, endpoint, description }: ChatComp
         <button
           type='submit'
           disabled={loading || !message.trim()}
-          className='w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors'
+          className='w-full bg-black text-white py-3 px-6 rounded-xl hover:bg-gray-800 disabled:bg-gray-400 disabled:cursor-not-allowed transition-all duration-200 font-medium shadow-sm hover:shadow-md'
         >
           {loading ? 'Thinking...' : 'Send Message'}
         </button>
       </form>
 
       {response && (
-        <div className='mt-6 p-4 bg-gray-100 rounded-lg'>
-          <h4 className='font-semibold mb-2 text-black'>Response:</h4>
-          <p className='whitespace-pre-wrap text-black text-sm'>{response}</p>
+        <div className='mt-8 p-6 rounded-xl bg-gray-50 max-w-md mx-auto text-left'>
+          <h4 className='font-bold mb-3 text-black text-center'>Response:</h4>
+          <p className='whitespace-pre-wrap text-black text-sm leading-relaxed'>{response}</p>
         </div>
       )}
     </div>
