@@ -1,0 +1,25 @@
+{
+  "name": "private-storage-nodejs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx read-collection.ts",
+    "build": "tsc",
+    "start": "node read-collection.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@nillion/nuc": "^0.1.1",
+    "@nillion/secretvaults": "^0.1.5"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "dotenv": "^17.2.1",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
+  }
+}
