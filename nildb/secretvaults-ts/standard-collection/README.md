@@ -7,10 +7,14 @@ There are 2 [collections types](https://docs.nillion.com/build/private-storage/o
 1. Standard Collections
 2. User Owned Collections
 
-This folder has reference examples for how to read from Standard Collections
+This folder has reference examples for working with Standard Collections
 
 ## Reference Examples
 
-- NextJs App
+- NextJs
+  - Recipe (read records)
+  - Full
 - NodeJs Script
+  - Recipe (read records)
+  - Full
 - React App
