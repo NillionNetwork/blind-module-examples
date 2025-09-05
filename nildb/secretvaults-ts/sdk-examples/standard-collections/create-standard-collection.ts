@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { randomUUID } from 'node:crypto';
-import { initSecretVaultBuilderClient } from './helpers.js';
-import { contactBookSchema } from './schema-examples.js';
+import { initSecretVaultBuilderClient } from '../client-helpers.js';
+import { contactBookSchema } from '../schema-examples.js';
 
 async function createStandardCollection() {
   try {

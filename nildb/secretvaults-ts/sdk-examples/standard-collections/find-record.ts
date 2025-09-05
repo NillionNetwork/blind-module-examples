@@ -1,21 +1,22 @@
 import 'dotenv/config';
-import { initSecretVaultBuilderClient } from './helpers.js';
+import { initSecretVaultBuilderClient } from '../client-helpers.js';
 
-async function deleteRecord(collectionId: string, recordId: string) {
+async function findRecordById(collectionId: string, recordId: string) {
   try {
     const builder = await initSecretVaultBuilderClient();
 
     // Tip: use https://collection-explorer.nillion.com/collections/<collection-id> to view the collection and records
-    const deleteResult = await builder.deleteData({
+    // Finding a specific record by its _id
+    const record = await builder.findData({
       collection: collectionId,
       filter: {
-        _id: recordId, // Filter by record ID, or use any other field(s) to match records
+        _id: recordId, // Filter by specific record ID
       },
     });
 
-    return deleteResult;
+    return record.data;
   } catch (error) {
-    console.error('Error deleting record:', error);
+    console.error('Error finding record by ID:', error);
     throw error;
   }
 }
@@ -33,15 +34,15 @@ if (!recordId) {
   process.exit(1);
 }
 
-deleteRecord(collectionId, recordId)
+findRecordById(collectionId, recordId)
   .then((result) => {
     console.log(
-      'Successfully deleted record across nodes',
+      'Successfully found record by ID',
       JSON.stringify(result, null, 2)
     );
     process.exit(0);
   })
   .catch((error) => {
-    console.error('Failed to delete record:', JSON.stringify(error));
+    console.error('Failed to find record by ID:', JSON.stringify(error));
     process.exit(1);
   });

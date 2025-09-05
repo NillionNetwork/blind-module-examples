@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { randomUUID } from 'node:crypto';
-import { initSecretVaultBuilderClient } from './helpers.js';
+import { initSecretVaultBuilderClient } from '../client-helpers.js';
 
 async function createStandardRecord(collectionId: string) {
   try {

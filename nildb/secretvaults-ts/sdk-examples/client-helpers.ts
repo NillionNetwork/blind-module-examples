@@ -1,5 +1,9 @@
 import { Keypair } from '@nillion/nuc';
-import { SecretVaultBuilderClient, Did } from '@nillion/secretvaults';
+import {
+  SecretVaultBuilderClient,
+  SecretVaultUserClient,
+  Did,
+} from '@nillion/secretvaults';
 import 'dotenv/config';
 
 export async function initSecretVaultBuilderClient() {
@@ -56,4 +60,26 @@ export async function initSecretVaultBuilderClient() {
   }
 
   return builder;
+}
+
+export async function initSecretVaultUserClient(userKey?: string) {
+  // Use provided key or fall back to environment variable
+  const key = userKey || process.env.NILLION_USER_KEY;
+
+  if (!key) {
+    throw new Error('Missing required user key: provide as parameter or set NILLION_USER_KEY environment variable');
+  }
+
+  // Create user client with same configuration as builder
+  const userClient = await SecretVaultUserClient.from({
+    keypair: Keypair.from(key),
+    baseUrls: [
+      'https://nildb-stg-n1.nillion.network',
+      'https://nildb-stg-n2.nillion.network',
+      'https://nildb-stg-n3.nillion.network',
+    ],
+    blindfold: { operation: 'store' },
+  });
+
+  return userClient;
 }

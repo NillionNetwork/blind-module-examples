@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { initSecretVaultBuilderClient } from './helpers.js';
+import { initSecretVaultBuilderClient } from '../client-helpers.js';
 
 async function updateRecord(collectionId: string, recordId: string) {
   try {

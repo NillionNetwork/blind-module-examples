@@ -8,9 +8,11 @@
   "license": "ISC",
   "type": "module",
   "scripts": {
-    "dev": "tsx full-example.ts",
+    "dev": "tsx owned-collections/debug-revoke-access.ts",
+    "example:standard": "tsx standard-collections/full-example-standard.ts",
+    "example:owned": "tsx owned-collections/full-example-owned.ts",
     "build": "tsc",
-    "start": "node full-example.js"
+    "start": "node owned-collections/full-example-owned.js"
   },
   "dependencies": {
     "@nillion/nuc": "^0.1.1",
