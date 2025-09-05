@@ -12,10 +12,10 @@ async function fullOwnedDataExample() {
   console.log('🚀 Starting Full Owned Data Example\n');
 
   try {
-    // Step 1: Initialize builder client from env
-    console.log('1️⃣ Initializing builder client...');
-    const builder = await initSecretVaultBuilderClient();
-    console.log('✅ Builder initialized:', builder.id);
+    // Step 1: Initialize builderClient client from env
+    console.log('1️⃣ Initializing builderClient client...');
+    const builderClient = await initSecretVaultBuilderClient();
+    console.log('✅ Builder initialized:', builderClient.id);
 
     // Step 2: Create a new user keypair
     console.log('\n2️⃣ Creating new user keypair...');
@@ -33,7 +33,7 @@ async function fullOwnedDataExample() {
     // Step 4: Create owned collection (inline logic from create-owned-collection.ts)
     console.log('\n4️⃣ Creating owned collection...');
     const collectionId = randomUUID();
-    const newOwnedCollection = await builder.createCollection({
+    const newOwnedCollection = await builderClient.createCollection({
       _id: collectionId,
       type: 'owned',
       name: 'Owned Contact Book - Full Example',
@@ -43,9 +43,9 @@ async function fullOwnedDataExample() {
 
     // Step 5: Create delegation token for user (inline logic from create-delegation-token.ts)
     console.log('\n5️⃣ Creating delegation token for user...');
-    const rootToken = builder.rootToken;
+    const rootToken = builderClient.rootToken;
     if (!rootToken) {
-      throw new Error('No root token available from builder');
+      throw new Error('No root token available from builderClient');
     }
 
     const expiresInMinutes = 60;
@@ -53,14 +53,14 @@ async function fullOwnedDataExample() {
     const delegationToken = NucTokenBuilder.extending(rootToken)
       .audience(userDid)
       .expiresAt(Math.floor(Date.now() / 1000) + expiresInSeconds)
-      .build(builder.keypair.privateKey());
+      .build(builderClient.keypair.privateKey());
     const tokenString = delegationToken.toString();
     console.log(
       '✅ Delegation token created (expires in 60 minutes)',
       tokenString
     );
 
-    // Step 6: User creates owned data with read permissions for builder (inline logic from create-owned-data.ts)
+    // Step 6: User creates owned data with read permissions for builderClient (inline logic from create-owned-data.ts)
     console.log('\n6️⃣ User creating owned data...');
 
     const userData = [
@@ -75,8 +75,8 @@ async function fullOwnedDataExample() {
 
     // Create ACL to grant access
     const acl: AclDto = {
-      grantee: builder.id,
-      read: false,
+      grantee: builderClient.id,
+      read: true,
       write: false,
       execute: false,
     };
@@ -106,7 +106,7 @@ async function fullOwnedDataExample() {
     const recordId = createdIds[0];
     console.log('✅ Owned data created with ID:', recordId);
     console.log('   - Owner:', userClient.id);
-    console.log('   - Granted access to:', builder.id);
+    console.log('   - Granted access to:', builderClient.id);
 
     // Step 7: Owner reads all records in the collection
     console.log('\n7️⃣ Owner listing all owned records...');
@@ -121,7 +121,7 @@ async function fullOwnedDataExample() {
         if (ref.collection === collectionId) {
           console.log(`\n   📄 Record: ${ref.document || ref.id}`);
           console.log(`      Collection: ${ref.collection}`);
-          console.log(`      Builder: ${ref.builder}`);
+          console.log(`      Builder: ${ref.builderClient}`);
 
           // Read the actual data
           const record = await userClient.readData({
@@ -141,10 +141,12 @@ async function fullOwnedDataExample() {
     console.log('   - Builder created owned collection:', collectionId);
     console.log('   - Builder issued delegation token to user');
     console.log('   - User created owned data with ID:', recordId);
-    console.log('   - User granted read access to builder');
+    console.log('   - User granted read access to builderClient');
     console.log('   - Owner successfully read all records');
 
-    console.log('\n🔗 The builder can view the collection in the explorer:');
+    console.log(
+      '\n🔗 The builderClient can view the collection in the explorer:'
+    );
     console.log(
       `   https://collection-explorer.nillion.com/collections/${collectionId}`
     );
@@ -153,7 +155,7 @@ async function fullOwnedDataExample() {
       collectionId,
       recordId,
       userDid: userDid.toString(),
-      builderDid: builder.id,
+      builderDid: builderClient.id,
     };
   } catch (error) {
     console.error('\n❌ Error in full example:', error);

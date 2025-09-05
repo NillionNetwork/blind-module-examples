@@ -14,7 +14,7 @@ export async function initSecretVaultBuilderClient() {
   }
   // get a Nillion API Key: https://docs.nillion.com/build/network-api-access
   // see Nillion Testnet Config: https://docs.nillion.com/build/network-config#nildb-nodes
-  const builder = await SecretVaultBuilderClient.from({
+  const builderClient = await SecretVaultBuilderClient.from({
     keypair: Keypair.from(NILLION_API_KEY),
     urls: {
       chain: 'http://rpc.testnet.nilchain-rpc-proxy.nilogy.xyz',
@@ -29,24 +29,27 @@ export async function initSecretVaultBuilderClient() {
   });
 
   // Refresh authentication
-  await builder.refreshRootToken();
+  await builderClient.refreshRootToken();
 
   // 1 time setup for new builders
-  // Register builder profile if it doesn't exist
+  // Register builderClient profile if it doesn't exist
   try {
-    const builderProfile = await builder.readProfile();
-    console.log('Using existing builder profile:', builderProfile.data._id);
+    const builderProfile = await builderClient.readProfile();
+    console.log(
+      'Using existing builderClient profile:',
+      builderProfile.data._id
+    );
   } catch {
-    // Profile doesn't exist, register the builder
+    // Profile doesn't exist, register the builderClient
     try {
       const BUILDER_NAME = 'Default Builder';
       const builderDid = Keypair.from(NILLION_API_KEY).toDid().toString();
-      await builder.register({
+      await builderClient.register({
         did: Did.parse(builderDid),
         name: BUILDER_NAME,
       });
       console.log(
-        `1 time builder profile registration complete for ${builderDid}`
+        `1 time builderClient profile registration complete for ${builderDid}`
       );
     } catch (error) {
       // Ignore duplicate key errors (concurrent registration)
@@ -59,7 +62,7 @@ export async function initSecretVaultBuilderClient() {
     }
   }
 
-  return builder;
+  return builderClient;
 }
 
 export async function initSecretVaultUserClient(userKey?: string) {
@@ -67,10 +70,12 @@ export async function initSecretVaultUserClient(userKey?: string) {
   const key = userKey || process.env.NILLION_USER_KEY;
 
   if (!key) {
-    throw new Error('Missing required user key: provide as parameter or set NILLION_USER_KEY environment variable');
+    throw new Error(
+      'Missing required user key: provide as parameter or set NILLION_USER_KEY environment variable'
+    );
   }
 
-  // Create user client with same configuration as builder
+  // Create user client with same configuration as builderClient
   const userClient = await SecretVaultUserClient.from({
     keypair: Keypair.from(key),
     baseUrls: [

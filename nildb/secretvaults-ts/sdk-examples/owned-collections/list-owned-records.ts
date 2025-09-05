@@ -21,7 +21,7 @@ async function listOwnedRecords() {
       index: index + 1,
       collection: ref.collection,
       record: ref.document || ref.id, // API uses 'document' but we call it 'record'
-      builder: ref.builder,
+      builderClient: ref.builderClient,
     }));
 
     return {
@@ -41,19 +41,19 @@ listOwnedRecords()
       'Owned records retrieved successfully',
       JSON.stringify(result, null, 2)
     );
-    
+
     // Also print a simple summary
     if (result.records.length > 0) {
       console.log('\n📄 Summary:');
-      result.records.forEach(rec => {
+      result.records.forEach((rec) => {
         console.log(`${rec.index}. Collection: ${rec.collection}`);
         console.log(`   Record: ${rec.record}`);
-        console.log(`   Builder: ${rec.builder}\n`);
+        console.log(`   Builder: ${rec.builderClient}\n`);
       });
     } else {
       console.log('\nNo owned records found.');
     }
-    
+
     process.exit(0);
   })
   .catch((error) => {

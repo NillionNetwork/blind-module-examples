@@ -3,11 +3,11 @@ import { initSecretVaultBuilderClient } from '../client-helpers.js';
 
 async function updateRecord(collectionId: string, recordId: string) {
   try {
-    const builder = await initSecretVaultBuilderClient();
+    const builderClient = await initSecretVaultBuilderClient();
 
     // Tip: use https://collection-explorer.nillion.com/collections/<collection-id> to view the collection and records
     // You can update both regular fields and encrypted fields (marked with %allot)
-    const updateResult = await builder.updateData({
+    const updateResult = await builderClient.updateData({
       collection: collectionId,
       filter: {
         _id: recordId, // Filter by record ID, or use any other field(s) to match records

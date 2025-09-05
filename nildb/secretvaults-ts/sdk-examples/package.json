@@ -8,7 +8,7 @@
   "license": "ISC",
   "type": "module",
   "scripts": {
-    "dev": "tsx owned-collections/debug-revoke-access.ts",
+    "dev": "tsx shared/read-collection.ts",
     "example:standard": "tsx standard-collections/full-example-standard.ts",
     "example:owned": "tsx owned-collections/full-example-owned.ts",
     "build": "tsc",

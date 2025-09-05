@@ -79,7 +79,7 @@ if (!collectionId || !delegationToken || !granteeDid) {
     );
   if (!granteeDid)
     console.error(
-      '- NILLION_GRANTEE_DID (DID to grant access to, e.g., builder DID)'
+      '- NILLION_GRANTEE_DID (DID to grant access to, e.g., builderClient DID)'
     );
   process.exit(1);
 }

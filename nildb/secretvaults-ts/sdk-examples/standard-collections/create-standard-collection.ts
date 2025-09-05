@@ -5,10 +5,10 @@ import { contactBookSchema } from '../schema-examples.js';
 
 async function createStandardCollection() {
   try {
-    const builder = await initSecretVaultBuilderClient();
+    const builderClient = await initSecretVaultBuilderClient();
     const newCollectionId = randomUUID();
 
-    const newStandardCollection = await builder.createCollection({
+    const newStandardCollection = await builderClient.createCollection({
       _id: newCollectionId,
       type: 'standard',
       name: 'Contact Book',
@@ -31,6 +31,9 @@ createStandardCollection()
     process.exit(0);
   })
   .catch((error) => {
-    console.error('Failed to create standard collection:', JSON.stringify(error));
+    console.error(
+      'Failed to create standard collection:',
+      JSON.stringify(error)
+    );
     process.exit(1);
   });

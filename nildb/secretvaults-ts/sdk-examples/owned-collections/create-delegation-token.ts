@@ -16,26 +16,26 @@ async function createDelegationToken(
   expiresInMinutes: number = 1
 ) {
   try {
-    const builder = await initSecretVaultBuilderClient();
-    const rootToken = builder.rootToken;
+    const builderClient = await initSecretVaultBuilderClient();
+    const rootToken = builderClient.rootToken;
     if (!rootToken) {
-      throw new Error('No root token available from builder');
+      throw new Error('No root token available from builderClient');
     } else {
       console.log(rootToken);
     }
 
     const expiresInSeconds = expiresInMinutes * 60;
 
-    // Create delegation token from builder to user
+    // Create delegation token from builderClient to user
     // Don't specify command - let the user client add it
     const delegationToken = NucTokenBuilder.extending(rootToken)
       .audience(userDid)
       .expiresAt(Math.floor(Date.now() / 1000) + expiresInSeconds)
-      .build(builder.keypair.privateKey());
+      .build(builderClient.keypair.privateKey());
 
     return {
       token: delegationToken,
-      builder: builder.id,
+      builderClient: builderClient.id,
       user: userDid.toString(),
       command: 'nil.db.data.create',
       expiresIn: `${expiresInMinutes} minute${

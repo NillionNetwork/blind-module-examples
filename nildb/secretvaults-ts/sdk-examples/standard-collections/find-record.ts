@@ -3,11 +3,11 @@ import { initSecretVaultBuilderClient } from '../client-helpers.js';
 
 async function findRecordById(collectionId: string, recordId: string) {
   try {
-    const builder = await initSecretVaultBuilderClient();
+    const builderClient = await initSecretVaultBuilderClient();
 
     // Tip: use https://collection-explorer.nillion.com/collections/<collection-id> to view the collection and records
     // Finding a specific record by its _id
-    const record = await builder.findData({
+    const record = await builderClient.findData({
       collection: collectionId,
       filter: {
         _id: recordId, // Filter by specific record ID

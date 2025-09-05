@@ -5,10 +5,10 @@ import { contactBookSchema } from '../schema-examples.js';
 
 async function createOwnedCollection() {
   try {
-    const builder = await initSecretVaultBuilderClient();
+    const builderClient = await initSecretVaultBuilderClient();
     const newCollectionId = randomUUID();
 
-    const newOwnedCollection = await builder.createCollection({
+    const newOwnedCollection = await builderClient.createCollection({
       _id: newCollectionId,
       type: 'owned',
       name: 'Owned Contact Book 1',

@@ -4,7 +4,7 @@ import { initSecretVaultBuilderClient } from '../client-helpers.js';
 
 async function createStandardRecord(collectionId: string) {
   try {
-    const builder = await initSecretVaultBuilderClient();
+    const builderClient = await initSecretVaultBuilderClient();
 
     // Tip: use https://collection-explorer.nillion.com/collections/<collection-id> to view the collection and schema
     // the collection page shows an "Example Record Payload" button that will show you the data structure for a record in the collection
@@ -18,7 +18,7 @@ async function createStandardRecord(collectionId: string) {
       },
     ];
 
-    const newStandardRecord = await builder.createStandardData({
+    const newStandardRecord = await builderClient.createStandardData({
       body: {
         collection: collectionId,
         data: recordData,

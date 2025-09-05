@@ -5,12 +5,12 @@ import { contactBookSchema } from '../schema-examples.js';
 
 async function runStandardCollectionExample() {
   try {
-    const builder = await initSecretVaultBuilderClient();
+    const builderClient = await initSecretVaultBuilderClient();
 
     // 1. Create a new standard collection
     console.log('\n1. Creating standard collection...');
     const collectionId = randomUUID();
-    const newCollection = await builder.createCollection({
+    const newCollection = await builderClient.createCollection({
       _id: collectionId,
       type: 'standard',
       name: 'Contact Book Example',
@@ -27,7 +27,7 @@ async function runStandardCollectionExample() {
     const record2Id = randomUUID();
     const record3Id = randomUUID();
 
-    const createRecordsResult = await builder.createStandardData({
+    const createRecordsResult = await builderClient.createStandardData({
       body: {
         collection: collectionId,
         data: [
@@ -62,7 +62,7 @@ async function runStandardCollectionExample() {
 
     // 3. Update record 2
     console.log('\n3. Updating record 2...');
-    const updateResult = await builder.updateData({
+    const updateResult = await builderClient.updateData({
       collection: collectionId,
       filter: {
         _id: record2Id,
@@ -80,7 +80,7 @@ async function runStandardCollectionExample() {
 
     // 4. Delete record 1
     console.log('\n4. Deleting record 1...');
-    const deleteResult = await builder.deleteData({
+    const deleteResult = await builderClient.deleteData({
       collection: collectionId,
       filter: {
         _id: record1Id,
@@ -90,7 +90,7 @@ async function runStandardCollectionExample() {
 
     // Final state: Show remaining records
     console.log('\n5. Final state - remaining records:');
-    const remainingRecords = await builder.findData({
+    const remainingRecords = await builderClient.findData({
       collection: collectionId,
       filter: {}, // Empty filter returns all records
     });

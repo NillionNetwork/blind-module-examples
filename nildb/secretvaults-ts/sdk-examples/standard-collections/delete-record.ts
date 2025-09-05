@@ -3,10 +3,10 @@ import { initSecretVaultBuilderClient } from '../client-helpers.js';
 
 async function deleteRecord(collectionId: string, recordId: string) {
   try {
-    const builder = await initSecretVaultBuilderClient();
+    const builderClient = await initSecretVaultBuilderClient();
 
     // Tip: use https://collection-explorer.nillion.com/collections/<collection-id> to view the collection and records
-    const deleteResult = await builder.deleteData({
+    const deleteResult = await builderClient.deleteData({
       collection: collectionId,
       filter: {
         _id: recordId, // Filter by record ID, or use any other field(s) to match records

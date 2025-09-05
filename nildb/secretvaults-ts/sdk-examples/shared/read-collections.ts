@@ -3,8 +3,8 @@ import { initSecretVaultBuilderClient } from '../client-helpers.js';
 
 async function readCollections() {
   try {
-    const builder = await initSecretVaultBuilderClient();
-    const collections = await builder.readCollections();
+    const builderClient = await initSecretVaultBuilderClient();
+    const collections = await builderClient.readCollections();
     return collections;
   } catch (error) {
     console.error('Error reading collections:', JSON.stringify(error));

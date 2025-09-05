@@ -3,9 +3,9 @@ import { initSecretVaultBuilderClient } from '../client-helpers.js';
 
 async function readCollectionRecords(collectionId: string) {
   try {
-    const builder = await initSecretVaultBuilderClient();
+    const builderClient = await initSecretVaultBuilderClient();
 
-    const records = await builder.findData({
+    const records = await builderClient.findData({
       collection: collectionId,
       filter: {}, // Empty filter returns all records
     });
