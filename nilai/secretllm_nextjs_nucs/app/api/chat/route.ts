@@ -23,14 +23,14 @@ export async function POST(request: NextRequest) {
 
     // Initialize the client in API key mode
     const client = new NilaiOpenAIClient({
-      baseURL: 'https://nilai-a779.nillion.network/nuc/v1/',
+      baseURL: 'https://nilai-a779.nillion.network/v1/',
       apiKey: process.env.NILLION_API_KEY,
       nilauthInstance: NilAuthInstance.SANDBOX,
     });
 
     // Make a request to the Nilai API
     const response = await client.chat.completions.create({
-      model: 'meta-llama/Llama-3.2-3B-Instruct',
+      model: 'google/gemma-3-27b-it',
       messages: [{ role: 'user', content: message }],
     });
 
