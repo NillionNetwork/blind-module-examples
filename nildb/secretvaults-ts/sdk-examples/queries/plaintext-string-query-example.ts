@@ -135,51 +135,44 @@ async function plaintextQueryExample() {
       queryId: string,
       variables: any = {}
     ) {
-      const runRequest: RunQueryRequest = {
+      // Run the query
+      const runResponse = await builderClient.runQuery({
         _id: queryId,
         variables,
-      };
-
-      const runResponse = await builderClient.runQuery(runRequest);
-      const runIds: Record<string, string> = {};
-      Object.entries(runResponse).forEach(([nodeId, response]) => {
-        if (response?.data) {
-          runIds[nodeId] = response.data;
-        }
       });
 
-      // Poll for results
-      let attempts = 0;
-      const maxAttempts = 10;
+      // Extract run IDs
+      const runIds = Object.fromEntries(
+        Object.entries(runResponse)
+          .filter(([_, r]) => r?.data)
+          .map(([nodeId, r]) => [nodeId, r.data])
+      );
 
-      while (attempts < maxAttempts) {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Poll for results (up to 30 seconds)
+      for (let i = 0; i < 10; i++) {
+        await new Promise((resolve) => setTimeout(resolve, i < 3 ? 1000 : 3000));
 
         const resultsResponse = await builderClient.readQueryRunResults(runIds);
-        let allCompleted = true;
-        let results: any = null;
+        
+        // Collect results and check status
+        const allResponses = Object.values(resultsResponse).filter(r => r?.data);
+        const nodeResults = allResponses
+          .filter(r => r.data.status === 'complete' && r.data.result)
+          .map(r => r.data.result);
+        
+        // Take the first node's result (they should all be the same)
+        const results = nodeResults[0] || [];
+        
+        const pending = allResponses.some(r => r.data.status === 'pending');
+        const errors = allResponses.filter(r => r.data.status === 'error');
 
-        for (const [nodeId, response] of Object.entries(resultsResponse)) {
-          if (response?.data) {
-            const status: RunQueryResultStatus = response.data.status;
-
-            if (status === 'complete') {
-              if (response.data.result) {
-                results = response.data.result;
-              }
-            } else if (status === 'error') {
-              console.error(`Error on node ${nodeId}:`, response.data.errors);
-              throw new Error('Query execution failed');
-            } else {
-              allCompleted = false;
-            }
-          }
+        if (errors.length > 0) {
+          throw new Error('Query failed: ' + JSON.stringify(errors[0].data.errors));
         }
 
-        if (allCompleted) {
+        if (!pending) {
           return results;
         }
-        attempts++;
       }
 
       throw new Error('Query execution timed out');
