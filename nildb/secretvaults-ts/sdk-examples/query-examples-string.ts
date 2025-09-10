@@ -87,7 +87,6 @@ export const getContactsAlphabeticallyQuery = {
       $project: {
         _id: 1,
         name: 1,
-        country_code: 1,
       },
     },
   ],
@@ -104,7 +103,6 @@ export const getContactsWithoutSensitiveDataQuery = {
       $project: {
         _id: 1,
         name: 1,
-        // explicitly excluding phone_number and country_code
       },
     },
   ],

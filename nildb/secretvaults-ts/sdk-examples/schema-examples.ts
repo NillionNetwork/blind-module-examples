@@ -11,6 +11,9 @@ export const contactBookSchema = {
       name: {
         type: 'string',
       },
+      age: {
+        type: 'number',
+      },
       phone_number: {
         type: 'object',
         properties: {
