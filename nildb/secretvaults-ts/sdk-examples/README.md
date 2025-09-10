@@ -14,10 +14,12 @@ cp .env.example .env
 # Run full examples
 npm run example:standard  # Complete standard collections workflow
 npm run example:owned     # Complete owned collections workflow
+npm run example:query     # Query examples on plaintext fields
 
 # Or run specific examples directly
 tsx standard-collections/create-standard-collection.ts
 tsx owned-collections/create-owned-collection.ts
+tsx queries/plaintext-query-example.ts
 ```
 
 Get your Nillion API key at: https://docs.nillion.com/build/network-api-access
@@ -40,6 +42,7 @@ Get your Nillion API key at: https://docs.nillion.com/build/network-api-access
 - `NILLION_DELEGATION_TOKEN` - Delegation token for owned data operations
 - `NILLION_GRANTEE_DID` - DID to grant access to
 - `NILLION_DOCUMENT_ID` - Document/record ID for operations
+- `NILLION_QUERY_ID` - Query ID for running/deleting specific queries
 
 ## Examples
 
@@ -91,15 +94,33 @@ Examples for working with owned collections (user-managed data with ACLs):
 - **grant-access.ts** - Grant read/write/execute permissions to another DID
 - **revoke-access.ts** - Revoke access permissions from a specific DID
 
+### Query Operations (`queries/`)
+
+Examples for creating and running queries on SecretVaults data:
+
+- **plaintext-query-example.ts** - Comprehensive example demonstrating queries on plaintext fields:
+  - Exact name matching
+  - Partial text search with regex patterns
+  - Alphabetical sorting with limits
+  - Document counting and existence checking
+  - Pagination with skip/limit
+  - Field projection (include/exclude specific fields)
+  - Complex pattern matching with multiple conditions
+- **create-query.ts** - Create a saved query definition
+- **run-query.ts** - Execute a query with variables and poll for results
+- **list-queries.ts** - List all available saved queries
+- **delete-query.ts** - Delete a saved query by ID
+
 ## Scripts
 
 ```bash
 # Run full examples
 npm run example:standard  # Run complete standard collections workflow
 npm run example:owned     # Run complete owned collections workflow
+npm run example:query     # Run comprehensive query examples
 
 # Development
-npm run dev    # Run owned collections full example (default)
+npm run dev    # Run shared/read-collection.ts (default)
 npm run build  # Compile TypeScript files
 npm start      # Run compiled JavaScript
 ```

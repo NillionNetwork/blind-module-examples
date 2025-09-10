@@ -8,10 +8,22 @@ export const contactBookSchema = {
         type: 'string',
         description: 'Unique identifier',
       },
-      'first name': {
+      name: {
         type: 'string',
       },
-      'phone number': {
+      age: {
+        type: 'number',
+      },
+      phone_number: {
+        type: 'object',
+        properties: {
+          '%share': {
+            type: 'string',
+          },
+        },
+        required: ['%share'],
+      },
+      country_code: {
         type: 'object',
         properties: {
           '%share': {
@@ -21,6 +33,6 @@ export const contactBookSchema = {
         required: ['%share'],
       },
     },
-    required: ['_id', 'first name', 'phone number'],
+    required: ['_id', 'name', 'phone_number'],
   },
 };

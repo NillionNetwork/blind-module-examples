@@ -66,8 +66,8 @@ async function fullOwnedDataExample() {
     const userData = [
       {
         _id: randomUUID(),
-        'first name': 'OWNED! Steph',
-        'phone number': {
+        name: 'OWNED! Steph',
+        phone_number: {
           '%allot': 'OWNED! 555-0001', // encrypted field
         },
       },

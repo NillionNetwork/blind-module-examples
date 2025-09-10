@@ -15,8 +15,8 @@ async function createOwnedData(
     const userData = [
       {
         _id: randomUUID(),
-        'first name': 'OWNED! Steph',
-        'phone number': {
+        name: 'OWNED! Steph',
+        phone_number: {
           '%allot': '555-555-5555', // field marked with %allot will be encrypted
         },
       },

@@ -45,3 +45,4 @@ tmp/
 .claude/
 CLAUDE.md
 secretvaults-ts/
+secretvaults-py/

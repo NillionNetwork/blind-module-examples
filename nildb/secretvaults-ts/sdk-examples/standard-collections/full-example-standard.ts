@@ -33,22 +33,22 @@ async function runStandardCollectionExample() {
         data: [
           {
             _id: record1Id,
-            'first name': 'Alice',
-            'phone number': {
+            name: 'Alice',
+            phone_number: {
               '%allot': '555-0001', // encrypted field
             },
           },
           {
             _id: record2Id,
-            'first name': 'Bob',
-            'phone number': {
+            name: 'Bob',
+            phone_number: {
               '%allot': '555-0002', // encrypted field
             },
           },
           {
             _id: record3Id,
-            'first name': 'Charlie',
-            'phone number': {
+            name: 'Charlie',
+            phone_number: {
               '%allot': '555-0003', // encrypted field
             },
           },
@@ -69,8 +69,8 @@ async function runStandardCollectionExample() {
       },
       update: {
         $set: {
-          'first name': 'Robert',
-          'phone number': {
+          name: 'Robert',
+          phone_number: {
             '%allot': '555-9999', // updated encrypted field
           },
         },
