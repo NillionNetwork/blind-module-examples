@@ -11,8 +11,8 @@ async function createStandardRecord(collectionId: string) {
     const recordData = [
       {
         _id: randomUUID(),
-        'first name': 'Steph',
-        'phone number': {
+        name: 'Steph',
+        phone_number: {
           '%allot': '555-555-5555', // field marked with %allot will be encrypted
         },
       },

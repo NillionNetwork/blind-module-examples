@@ -14,8 +14,8 @@ async function updateRecord(collectionId: string, recordId: string) {
       },
       update: {
         $set: {
-          'first name': 'Updated Name',
-          'phone number': {
+          name: 'Updated Name',
+          phone_number: {
             '%allot': '111-222-3333', // field marked with %allot will be encrypted
           },
         },

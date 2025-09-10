@@ -11,6 +11,7 @@
     "dev": "tsx shared/read-collection.ts",
     "example:standard": "tsx standard-collections/full-example-standard.ts",
     "example:owned": "tsx owned-collections/full-example-owned.ts",
+    "example:query": "tsx queries/plaintext-query-example.ts",
     "build": "tsc",
     "start": "node owned-collections/full-example-owned.js"
   },
