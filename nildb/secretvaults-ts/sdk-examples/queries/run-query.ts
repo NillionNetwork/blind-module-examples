@@ -1,107 +1,88 @@
 import 'dotenv/config';
 import { initSecretVaultBuilderClient } from '../client-helpers.js';
-import type { RunQueryRequest, RunQueryResultStatus } from '@nillion/secretvaults';
+import type { RunQueryRequest } from '@nillion/secretvaults';
 
-async function runQuery(queryId: string, searchName: string = 'Sample Item 1') {
-  try {
-    const builderClient = await initSecretVaultBuilderClient();
-    
-    // Run the query with variables
-    const runQueryRequest: RunQueryRequest = {
-      _id: queryId,
-      variables: { name: searchName }
-    };
-    
-    console.log(`Running query ${queryId} with name="${searchName}"`);
-    const runResponse = await builderClient.runQuery(runQueryRequest);
-    
-    // Extract run IDs from all nodes
-    const runIds: Record<string, string> = {};
-    Object.entries(runResponse).forEach(([nodeId, response]) => {
-      if (response?.data) {
-        runIds[nodeId] = response.data;
-      }
-    });
-    
-    console.log('Query execution started. Run IDs:', runIds);
-    
-    // Poll for results with retry logic
-    const retryIntervals = [1000, 2000, 5000, 10000, 30000]; // ms
-    let attempt = 0;
-    
-    while (attempt < retryIntervals.length) {
-      await new Promise(resolve => setTimeout(resolve, retryIntervals[attempt]));
-      
-      console.log(`\nAttempt ${attempt + 1}: Checking query status...`);
-      
-      const resultsResponse = await builderClient.readQueryRunResults(runIds);
-      
-      let allCompleted = true;
-      let hasError = false;
-      const results: any[] = [];
-      
-      for (const [nodeId, response] of Object.entries(resultsResponse)) {
-        if (response?.data) {
-          const status: RunQueryResultStatus = response.data.status;
-          console.log(`Node ${nodeId.slice(0, 8)}... status: ${status}`);
-          
-          if (status === 'complete') {
-            if (response.data.result) {
-              results.push(response.data.result);
-            }
-          } else if (status === 'error') {
-            hasError = true;
-            console.error(`Error on node ${nodeId}:`, response.data.errors);
-          } else {
-            allCompleted = false;
-          }
-        }
-      }
-      
-      if (allCompleted || hasError) {
-        if (hasError) {
-          throw new Error('Query execution failed on one or more nodes');
-        }
-        
-        // Unify results if key is available
-        if (builderClient.options.key && results.length > 0) {
-          console.log('\nUnifying concealed data from all nodes...');
-          // In a real scenario, you would unify the shares here
-          // For now, we'll just return the first result
-          return results[0];
-        }
-        
-        return results;
-      }
-      
-      attempt++;
+async function runQuery(queryId: string, variables: Record<string, any> = {}) {
+  const builderClient = await initSecretVaultBuilderClient();
+
+  // Run the query
+  const runResponse = await builderClient.runQuery({
+    _id: queryId,
+    variables,
+  } as RunQueryRequest);
+
+  // Extract run IDs from responses
+  const runIds = Object.fromEntries(
+    Object.entries(runResponse)
+      .filter(([_, r]) => r?.data)
+      .map(([nodeId, r]) => [nodeId, r.data])
+  );
+
+  // Poll for results (up to 30 seconds)
+  for (let i = 0; i < 10; i++) {
+    await new Promise((resolve) => setTimeout(resolve, i < 3 ? 1000 : 3000));
+
+    const resultsResponse = await builderClient.readQueryRunResults(runIds);
+
+    // Collect results and check status
+    const allResponses = Object.values(resultsResponse).filter((r) => r?.data);
+    const nodeResults = allResponses
+      .filter((r) => r.data.status === 'complete' && r.data.result)
+      .map((r) => r.data.result);
+
+    // Take the first node's result (they should all be the same)
+    const results = nodeResults[0] || [];
+
+    const pending = allResponses.some((r) => r.data.status === 'pending');
+    const errors = allResponses.filter((r) => r.data.status === 'error');
+
+    if (errors.length > 0) {
+      throw new Error('Query failed: ' + JSON.stringify(errors[0].data.errors));
     }
-    
-    throw new Error('Query execution timed out');
-    
-  } catch (error) {
-    console.error('Error running query:', error);
-    throw error;
+
+    if (!pending) {
+      return results;
+    }
   }
+
+  throw new Error('Query execution timed out');
 }
 
-const queryId = process.env.NILLION_QUERY_ID;
-const searchName = process.env.SEARCH_NAME || 'Sample Item 1';
+// Main execution
+(async () => {
+  const queryId = process.argv[2] || process.env.NILLION_QUERY_ID;
 
-if (!queryId) {
-  console.error('Missing required environment variable: NILLION_QUERY_ID');
-  process.exit(1);
-}
-
-runQuery(queryId, searchName)
-  .then((result) => {
-    console.log(
-      '\nQuery completed successfully. Results:',
-      JSON.stringify(result, null, 2)
-    );
-    process.exit(0);
-  })
-  .catch((error) => {
-    console.error('Failed to run query:', JSON.stringify(error));
+  if (!queryId) {
+    console.error('Usage: npm run run-query <query-id> [variables-json]');
+    console.error('Or set NILLION_QUERY_ID environment variable');
     process.exit(1);
-  });
+  }
+
+  // Parse variables with fallback
+  let variables: Record<string, any> = { searchTerm: 'Alice' }; // fallback uses the searchContactsByPartialNameQuery query
+  if (process.argv[3]) {
+    try {
+      variables = JSON.parse(process.argv[3]);
+    } catch {
+      console.error('Invalid JSON for variables');
+      process.exit(1);
+    }
+  } else if (process.env.QUERY_VARIABLES) {
+    try {
+      variables = JSON.parse(process.env.QUERY_VARIABLES);
+    } catch {
+      console.error('Invalid JSON in QUERY_VARIABLES');
+      process.exit(1);
+    }
+  }
+
+  try {
+    const results = await runQuery(queryId, variables);
+    // For single result queries, unwrap the array
+    const output = results.length === 1 ? results[0] : results;
+    console.log(JSON.stringify(output, null, 2));
+  } catch (error: any) {
+    console.error(error.message);
+    process.exit(1);
+  }
+})();
