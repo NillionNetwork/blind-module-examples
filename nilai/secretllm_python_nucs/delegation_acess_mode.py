@@ -29,7 +29,7 @@ def main():
     # The client is responsible for making requests to the Nilai API.
     # We do not provide an API key but we set the auth type to DELEGATION_TOKEN
     client = Client(
-        base_url="https://nilai-a779.nillion.network/nuc/v1/",
+        base_url="https://nilai-a779.nillion.network/v1/",
         auth_type=AuthType.DELEGATION_TOKEN,
         # For production instances, use the following:
         # nilauth_instance=NilAuthInstance.PRODUCTION,
