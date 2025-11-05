@@ -1,0 +1,17 @@
+services:
+  api:
+    image: node:20
+    container_name: express-api
+    working_dir: /app
+    volumes:
+      - $FILES/index.js:/app/index.js
+      - $FILES/package.json:/app/package.json
+      - $FILES/package-lock.json:/app/package-lock.json
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - SECRET_MESSAGE=${SECRET_MESSAGE:-Default secret message}
+      - WALLET_ADDRESS=${WALLET_ADDRESS:-0x742d35Cc6634C0532925a3b844Bc9e7595f8fA49}
+    command: sh -c "cd /app && npm ci --only=production && node index.js"
+    restart: unless-stopped

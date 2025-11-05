@@ -1,0 +1,24 @@
+{
+  "name": "dockerized-api",
+  "version": "1.0.0",
+  "description": "A minimal dockerized Express.js REST API",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@coinbase/x402": "^0.6.4",
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "x402-express": "^0.6.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
