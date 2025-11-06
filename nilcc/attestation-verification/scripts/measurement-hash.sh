@@ -5,7 +5,7 @@ set -euo pipefail
 SCRIPT_PATH=$(dirname $(realpath $0))
 ROOT_PATH="$SCRIPT_PATH/../"
 DOCKER_COMPOSE_HASH=$(sha256sum $ROOT_PATH/docker-compose.yaml | cut -d" " -f1)
-VCPUS=1
+VCPUS=1 #4 if on mainnet
 NILCC_VERSION=0.2.1
 NILCC_VERIFIER_VERSION=0.3.0
 
