@@ -8,6 +8,8 @@ DOCKER_COMPOSE_HASH=$(sha256sum $ROOT_PATH/docker-compose.yaml | cut -d" " -f1)
 VCPUS=1 #4 if on mainnet
 NILCC_VERSION=0.2.1
 NILCC_VERIFIER_VERSION=0.3.0
+CURRENT_VERSION=0.1.0
 
 MEASUREMENT_HASH=$(docker run -v/tmp/nilcc-verifier-cache:/tmp/nilcc-verifier-cache --rm ghcr.io/nillionnetwork/nilcc-verifier:$NILCC_VERIFIER_VERSION measurement-hash $DOCKER_COMPOSE_HASH $NILCC_VERSION --vm-type cpu --cpus $VCPUS)
-echo "$MEASUREMENT_HASH"
+echo "{\"$CURRENT_VERSION\": \"$MEASUREMENT_HASH\"}" > "$ROOT_PATH/measurement-hash.json"
+echo "Measurement hash written to measurement-hash.json"
