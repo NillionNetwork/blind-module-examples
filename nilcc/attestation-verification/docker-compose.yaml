@@ -1,5 +1,0 @@
-services:
-  web:
-    image: caddy:2
-    command: |
-      caddy respond --listen :8080 --body '{"hello":"world"}' --header "Content-Type: application/json"
