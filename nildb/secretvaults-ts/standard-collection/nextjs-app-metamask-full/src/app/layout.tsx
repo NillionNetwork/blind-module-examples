@@ -3,7 +3,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { LogProvider } from "@/context/LogContext";
 import { NillionProvider } from "@/context/NillionContext";
 import { useState } from "react";
 
@@ -30,9 +29,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <QueryClientProvider client={queryClient}>
-          <LogProvider>
-            <NillionProvider>{children}</NillionProvider>
-          </LogProvider>
+          <NillionProvider>{children}</NillionProvider>
         </QueryClientProvider>
       </body>
     </html>
