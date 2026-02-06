@@ -17,6 +17,7 @@ A complete implementation of passwordless authentication where users sign in usi
 - ✅ **Decentralized Identity (DID)** - W3C standard DIDs for user identification
 - ✅ **Session Persistence** - Stay logged in across page refreshes
 - ✅ **Multi-Wallet Support** - Works even with multiple wallet extensions
+- ✅ **Real-Time Logging** - See authentication progress in real-time
 - ✅ **Auto-Reconnect** - Seamlessly restore sessions
 - ✅ **Privacy-Preserving** - Data encrypted with Blindfold
 - ✅ **Production Ready** - Comprehensive error handling and testing
@@ -143,6 +144,7 @@ After running the app, you should see:
 - [x] Tokens created
 - [x] Builder registered
 - [x] Session persists on refresh
+- [x] Logs show progress
 - [x] UI updates correctly
 - [x] Logout works
 - [x] Auto-reconnect works

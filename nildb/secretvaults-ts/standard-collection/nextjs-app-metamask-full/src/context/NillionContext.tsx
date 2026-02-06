@@ -7,8 +7,9 @@ import { createContext, type ReactNode, useCallback, useEffect, useMemo, useRef,
 import { createWalletClient, custom, type TypedDataDomain } from "viem";
 import { mainnet, sepolia } from "viem/chains";
 import { AuthFlowManager } from "@/context/AuthFlowManager";
+import { useLogContext } from "@/context/LogContext";
 import { usePersistedConnection } from "@/hooks/usePersistedConnection";
-import type { NillionState } from "@/types/NillionState";
+import type { NillionState } from "./NillionState";
 
 // Extend Window interface to include ethereum property (MetaMask/Wallets)
 declare global {
@@ -38,6 +39,7 @@ const initialState: NillionState = {
 };
 
 export function NillionProvider({ children }: { children: ReactNode }) {
+  const { log, clearLogs } = useLogContext();
   const [state, setState] = useState<NillionState>(initialState);
   const {
     hasConnected,
@@ -48,10 +50,9 @@ export function NillionProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
 
   const connectMetaMask = useCallback(async () => {
-    console.log("[Nillion] Connecting to MetaMask...");
+    log("🔌 Connecting to MetaMask...");
     if (!window.ethereum) {
-      console.error("[Nillion] MetaMask is not installed.");
-      return;
+      return log("❌ MetaMask is not installed.");
     }
     try {
       const eth: any = window.ethereum as any;
@@ -107,21 +108,23 @@ export function NillionProvider({ children }: { children: ReactNode }) {
         },
       }));
       setMetaMaskConnected();
-      console.log(`[Nillion] MetaMask connected: ${account}`);
+      log(`✅ MetaMask connected: ${account}`);
     } catch (e: unknown) {
       const err = e as any;
       const code = err?.code ? ` (code ${err.code})` : "";
       const details = err?.data?.message || err?.message || String(err);
-      console.error("[Nillion] MetaMask connection failed." + code, details);
+      log("❌ MetaMask connection failed." + code, details);
     }
-  }, [setMetaMaskConnected]);
+  }, [log, setMetaMaskConnected]);
 
   const logout = useCallback(() => {
     setState(initialState);
     clearPersistedConnection();
     queryClient.removeQueries({ queryKey: ["session"] });
-    console.log("[Nillion] Session disconnected.");
-  }, [clearPersistedConnection, queryClient]);
+    queryClient.removeQueries({ queryKey: ["subscriptionStatus"] });
+    queryClient.removeQueries({ queryKey: ["builderProfile"] });
+    clearLogs("🔌 Session disconnected.");
+  }, [clearPersistedConnection, clearLogs, queryClient]);
 
   // Auto-reconnect effect (only run once on mount)
   useEffect(() => {
