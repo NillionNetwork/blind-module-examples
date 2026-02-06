@@ -1,4 +1,5 @@
-import type { Envelope, NilauthClient } from "@nillion/nuc";
+import type { Envelope } from "@nillion/nuc";
+import type { NilauthClient } from "@nillion/nilauth-client";
 import type { SecretVaultBuilderClient } from "@nillion/secretvaults";
 import { useQuery } from "@tanstack/react-query";
 
@@ -20,4 +21,3 @@ export const useSessionQuery = () => {
     retry: false,
   });
 };
-

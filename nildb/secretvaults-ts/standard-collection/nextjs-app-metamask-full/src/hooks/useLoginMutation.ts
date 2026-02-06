@@ -1,4 +1,5 @@
-import { Builder, type Command, NilauthClient, Validator } from "@nillion/nuc";
+import { Builder, type Command, Validator } from "@nillion/nuc";
+import { NilauthClient } from "@nillion/nilauth-client";
 import { NucCmd, SecretVaultBuilderClient } from "@nillion/secretvaults";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { NETWORK_CONFIG } from "@/config";
@@ -27,7 +28,7 @@ async function login(
   log("📦 Found stored session, re-hydrating clients...");
   const nilauthClient = await NilauthClient.create({
     baseUrl: NETWORK_CONFIG.nilauth,
-    payer: undefined
+    chainId: NETWORK_CONFIG.nilauthChainId,
   });
 
   const nillionClient = await SecretVaultBuilderClient.from({
@@ -122,4 +123,3 @@ export const useLoginMutation = () => {
     },
   });
 };
-
