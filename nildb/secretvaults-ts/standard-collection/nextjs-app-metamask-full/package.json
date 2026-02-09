@@ -9,10 +9,11 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@nillion/nuc": "^1.1.1",
-    "@nillion/secretvaults": "^1.1.0",
+    "@nillion/nilauth-client": "2.0.0",
+    "@nillion/nuc": "2.0.0",
+    "@nillion/secretvaults": "2.0.0",
     "@tanstack/react-query": "^5.90.9",
-    "next": "16.0.3",
+    "next": "16.1.4",
     "react": "19.2.0",
     "react-dom": "19.2.0",
     "viem": "^2.39.0"
@@ -26,5 +27,10 @@
     "eslint-config-next": "16.0.3",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "pnpm": {
+    "overrides": {
+      "libsodium-wrappers-sumo": "0.8.0"
+    }
   }
 }

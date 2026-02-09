@@ -1,38 +1,41 @@
-import { Builder, Codec, type Command, NilauthClient } from "@nillion/nuc";
+import { Builder, Codec, type Command } from "@nillion/nuc";
+import { NilauthClient } from "@nillion/nilauth-client";
 import { NucCmd, SecretVaultBuilderClient } from "@nillion/secretvaults";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { NETWORK_CONFIG } from "@/config";
+import { useLogContext } from "@/context/LogContext";
 import { useNillion } from "@/hooks/useNillion";
 import { usePersistedConnection } from "@/hooks/usePersistedConnection";
 import type { Session } from "./useSessionQuery";
 
 async function initializeSession(
   signer: ReturnType<typeof useNillion>["state"]["signer"],
+  log: ReturnType<typeof useLogContext>["log"],
 ): Promise<Session> {
   if (!signer) {
     throw new Error("Signer not available");
   }
 
-  console.log("[Nillion] Initializing clients...");
+  log("⚙️ Initializing clients...");
 
-  const nilauthClient = await NilauthClient.create({ 
-    baseUrl: NETWORK_CONFIG.nilauth, 
-    payer: undefined 
+  const nilauthClient = await NilauthClient.create({
+    baseUrl: NETWORK_CONFIG.nilauth,
+    chainId: NETWORK_CONFIG.nilauthChainId,
   });
-  console.log("[Nillion] Nilauth client created");
+  log("✅ Nilauth client created");
 
   const subscriberDid = await signer.getDid();
-  console.log("[Nillion] Checking subscription status for builder account...");
+  log("🔍 Checking subscription status for builder account...");
   
   const subStatus = await nilauthClient.subscriptionStatus(subscriberDid, "nildb");
 
   if (!subStatus.subscribed) {
     const errorMsg = "No active NilDB subscription found for this builder account.";
-    console.error("[Nillion] " + errorMsg);
+    log("❌ " + errorMsg);
     throw new Error(errorMsg);
   }
   
-  console.log("[Nillion] Active subscription found for builder account.");
+  log("✅ Active subscription found for builder account.");
 
   const nillionClient = await SecretVaultBuilderClient.from({
     signer,
@@ -41,12 +44,12 @@ async function initializeSession(
     blindfold: { operation: "store" },  // Enable encryption for %allot fields
   });
 
-  console.log("[Nillion] Creating root authorization token...");
+  log("🔑 Creating root authorization token...");
   await nillionClient.refreshRootToken();
   const rootToken = nillionClient.rootToken;
-  console.log("[Nillion] Root token created.");
+  log("✅ Root token created.");
 
-  console.log(`[Nillion] Minting invocation tokens for ${nillionClient.nodes.length} NilDB nodes...`);
+  log(`🔨 Minting invocation tokens for ${nillionClient.nodes.length} NilDB nodes...`);
   const nildbTokens: Record<string, string> = {};
   for (const node of nillionClient.nodes) {
     nildbTokens[node.id.didString] = await Builder.invocationFrom(rootToken)
@@ -55,20 +58,20 @@ async function initializeSession(
       .expiresIn(86400)
       .signAndSerialize(signer);
   }
-  console.log("[Nillion] All node tokens minted.");
+  log("✅ All node tokens minted.");
 
-  console.log("[Nillion] Checking for existing builder profile...");
+  log("🔍 Checking for existing builder profile...");
   try {
     await nillionClient.readProfile({ auth: { invocations: nildbTokens } });
-    console.log("[Nillion] Builder profile found.");
+    log("✅ Builder profile found.");
   } catch (_error) {
-    console.log("[Nillion] No profile found, attempting to register builder...");
+    log("ℹ️ No profile found, attempting to register builder...");
     try {
       await nillionClient.register({
         did: subscriberDid.didString,
         name: "Demo Builder",
       });
-      console.log("[Nillion] Builder registered successfully.");
+      log("✅ Builder registered successfully.");
     } catch (registerError: any) {
       const errorMessage = registerError?.message || String(registerError);
       const errorString = JSON.stringify(registerError);
@@ -80,7 +83,7 @@ async function initializeSession(
         errorsArray.some((e: any) => String(e).includes("DuplicateEntryError"));
       
       if (hasDuplicateError) {
-        console.log("[Nillion] Builder already registered (duplicate entry) - continuing.");
+        log("ℹ️ Builder already registered (duplicate entry) - continuing.");
       } else {
         throw registerError;
       }
@@ -91,21 +94,23 @@ async function initializeSession(
 }
 
 export const useInitializeSessionMutation = () => {
+  const { log } = useLogContext();
   const { state } = useNillion();
   const queryClient = useQueryClient();
   const { setStoredRootToken, setStoredNildbTokens } = usePersistedConnection();
 
   return useMutation({
-    mutationFn: () => initializeSession(state.signer),
+    mutationFn: () => initializeSession(state.signer, log),
     onSuccess: (data) => {
-      console.log("[Nillion] Session setup complete!");
+      log("✅ Session setup complete!");
       queryClient.setQueryData(["session"], data);
       setStoredRootToken(Codec.serializeBase64Url(data.rootToken));
       setStoredNildbTokens(data.nildbTokens);
+      queryClient.invalidateQueries({ queryKey: ["subscriptionStatus"] });
       queryClient.invalidateQueries({ queryKey: ["builderProfile"] });
     },
     onError: (error) => {
-      console.error("[Nillion] Session initialization failed", error instanceof Error ? error.message : String(error));
+      log("❌ Session initialization failed", error instanceof Error ? error.message : String(error));
       console.error("Full Error:", error);
     },
   });

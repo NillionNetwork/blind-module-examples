@@ -2,16 +2,18 @@
 
 import { useNillion } from "@/hooks/useNillion";
 import { useSessionQuery } from "@/hooks/useSessionQuery";
+import { useLogContext } from "@/context/LogContext";
 
 export default function Home() {
   const { state, connectMetaMask, logout } = useNillion();
   const { isSuccess: isSessionReady } = useSessionQuery();
+  const { logs } = useLogContext();
 
   const isAuthenticated = state.wallets.isMetaMaskConnected && isSessionReady;
 
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-zinc-50 to-zinc-100 dark:from-zinc-900 dark:to-black font-sans">
-      <main className="w-full max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 gap-6">
+      <main className="w-full max-w-6xl mx-auto px-6 py-8 grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Left Panel - Auth */}
         <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-xl border border-zinc-200 dark:border-zinc-800 p-8">
           {/* Header */}
@@ -163,7 +165,27 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Logs panel removed for simplified quickstart */}
+        {/* Right Panel - Logs */}
+        <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-xl border border-zinc-200 dark:border-zinc-800 p-8">
+          <h2 className="text-xl font-bold text-zinc-900 dark:text-white mb-4">
+            Authentication Logs
+          </h2>
+          <div className="bg-zinc-50 dark:bg-zinc-950 rounded-lg p-4 h-[600px] overflow-y-auto font-mono text-xs">
+            {logs.length === 0 ? (
+              <p className="text-zinc-500 dark:text-zinc-400">
+                No logs yet. Connect MetaMask to start.
+              </p>
+            ) : (
+              <div className="space-y-1">
+                {logs.map((log, i) => (
+                  <div key={i} className="text-zinc-700 dark:text-zinc-300 whitespace-pre-wrap">
+                    {log}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
       </main>
     </div>
   );

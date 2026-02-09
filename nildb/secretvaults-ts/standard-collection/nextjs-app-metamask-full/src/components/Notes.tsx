@@ -134,7 +134,7 @@ export function Notes() {
           >
             {isCreating ? "Creating..." : "Create Note"}
           </button>
-          {createError && (
+          {Boolean(createError) && (
             <p className="mt-2 text-sm text-red-600 dark:text-red-400">
               Error: {createError instanceof Error ? createError.message : "Failed to create note"}
             </p>
