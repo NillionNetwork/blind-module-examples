@@ -23,9 +23,8 @@ export async function POST(request: NextRequest) {
 
     // Initialize the client in API key mode
     const client = new NilaiOpenAIClient({
-      baseURL: 'https://nilai-a779.nillion.network/v1/',
+      baseURL: 'https://api.nilai.nillion.network/nuc/v1/',
       apiKey: process.env.NILLION_API_KEY,
-      nilauthInstance: NilAuthInstance.SANDBOX,
     });
 
     // Make a request to the Nilai API
