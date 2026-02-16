@@ -1,6 +1,6 @@
 # Blind Module Examples
 
-![Blind Modules Banner](img/blind-modules-banner.png)
+<img width="1376" height="768" alt="blind-modules-examples" src="https://github.com/user-attachments/assets/8be53906-403d-460f-96b6-53d7f6733bef" />
 
 Current modules and examples available in this repository.
 
