@@ -32,7 +32,6 @@ export async function POST(request: NextRequest) {
     // The server is responsible for creating delegation tokens
     // and managing their expiration and usage.
     const server = new DelegationTokenServer(API_KEY, {
-      nilauthInstance: NilAuthInstance.SANDBOX,
       expirationTime: 10, // 10 seconds validity of delegation tokens
       tokenMaxUses: 1, // 1 use of a delegation token
     });
@@ -41,7 +40,7 @@ export async function POST(request: NextRequest) {
     // The client is responsible for making requests to the Nilai API.
     // We do not provide an API key but we set the auth type to DELEGATION_TOKEN
     const client = new NilaiOpenAIClient({
-      baseURL: 'https://nilai-a779.nillion.network/v1/',
+      baseURL: 'https://api.nilai.nillion.network/nuc/v1/',
       authType: AuthType.DELEGATION_TOKEN,
     });
 
