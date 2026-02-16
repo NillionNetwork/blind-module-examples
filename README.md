@@ -1,12 +1,12 @@
 # Blind Module Examples
 
-Current modules and examples available in this repository.
-
 ![Blind Modules Banner](img/blind-modules-banner.png)
+
+Current modules and examples available in this repository.
 
 ## nilDB (`/nildb`)
 
-### Private Storage
+Private Storage / nilDB examples:
 
 - [secretvaults-ts](/nildb/secretvaults-ts)
   - [owned-collection](/nildb/secretvaults-ts/owned-collection) (TODO)
