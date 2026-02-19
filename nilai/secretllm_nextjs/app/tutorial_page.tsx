@@ -2,11 +2,18 @@
 
 import { useState } from 'react';
 
+interface JournalEntry {
+  id: number;
+  date: Date;
+  content: string;
+  analysis: string;
+}
+
 export default function AIJournal() {
   const [journalEntry, setJournalEntry] = useState('');
   const [analysis, setAnalysis] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [entries, setEntries] = useState([]);
+  const [entries, setEntries] = useState<JournalEntry[]>([]);
   const analyzeEntry = async () => {
     setIsAnalyzing(true);
 
@@ -32,8 +39,8 @@ export default function AIJournal() {
 
       const data = await response.json();
       console.log('data', data);
-      const analysis = data.choices[0].message.content;
-      console.log('analysis', analysis);
+      const analysisText = data.choices[0].message.content;
+      console.log('analysis', analysisText);
 
       // Check if the response contains an error message
       if (data.error) {
@@ -44,7 +51,7 @@ export default function AIJournal() {
         id: entries.length + 1,
         date: new Date(),
         content: journalEntry,
-        analysis: analysis,
+        analysis: analysisText,
       };
       setEntries([newEntry, ...entries]);
       setAnalysis(data.text);
