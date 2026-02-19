@@ -20,9 +20,8 @@ Private Storage / nilDB examples:
 Private AI / SecretLLM examples:
 
 - [secretllm_nextjs](/nilai/secretllm_nextjs) (Next.js chat app with API-key flow)
-- [secretllm_nextjs_nucs](/nilai/secretllm_nextjs_nucs) (Next.js chat app with API-key and delegation flows)
-- [secretllm_nodejs](/nilai/secretllm_nodejs) (Node.js script example)
-- [secretllm_python_nucs](/nilai/secretllm_python_nucs) (Python script examples)
+- [secretllm_nextjs_sdk](/nilai/secretllm_nextjs_sdk) (Next.js chat app with Delegated Signing flow)
+- [secretllm_nodejs](/nilai/secretllm_nodejs) (Node.js script example with API-key flow)
 
 ## nilCC (`/nilcc`)
 
