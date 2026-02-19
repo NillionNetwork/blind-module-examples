@@ -2,7 +2,7 @@
 
 ### 1. Install dependencies
 
-```
+```bash
 npm i
 ```
 
@@ -12,15 +12,20 @@ npm i
 cp .env.example .env
 ```
 
-### 3. Add your nilAI API Key to your .env
+### 3. Add your nilAI credential to your .env
 
-Create a nilAI node API Key: https://docs.nillion.com/build/secretLLM/access
+Create an API key from https://nilai.nillion.com/.
 
 Add it to your .env file:
 
 ```
-NILAI_API_KEY=your-nilai-api-key
+NILLION_API_KEY=YOUR_API_KEY_HERE
 ```
+
+This example uses direct API-key authentication only (`Bearer` token).
+
+- Base URL: `https://api.nilai.nillion.network/v1/`
+- Model: `openai/gpt-oss-20b`
 
 ### 4. Generate text:
 

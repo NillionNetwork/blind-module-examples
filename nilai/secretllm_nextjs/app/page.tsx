@@ -37,15 +37,50 @@ export default function Home() {
         }),
       });
 
-      const data = await res.json();
+      const raw = await res.text();
+      let data: Record<string, unknown> = {};
+      try {
+        data = raw ? JSON.parse(raw) : {};
+      } catch {
+        if (raw.startsWith('<!DOCTYPE')) {
+          throw new Error(
+            'Server returned an HTML error page. Check the Next.js terminal logs and restart the dev server.'
+          );
+        }
+        throw new Error(`Server returned non-JSON response: ${raw.slice(0, 160)}`);
+      }
+
+      const content =
+        typeof data.response === 'string'
+          ? data.response
+          : (data as { choices?: Array<{ message?: { content?: string } }> })
+              .choices?.[0]?.message?.content;
+
+      if (!res.ok) {
+        const errorMessage =
+          (typeof data.error === 'string' ? data.error : undefined) ??
+          `Request failed with status ${res.status}`;
+        throw new Error(errorMessage);
+      }
+
+      if (typeof content !== 'string' || !content.trim()) {
+        throw new Error('No valid response content received from API');
+      }
 
       const assistantMessage: ChatMessage = {
         role: 'assistant',
-        content: data.choices[0].message.content,
+        content,
       };
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (error) {
       console.error('Error:', error);
+      const assistantMessage: ChatMessage = {
+        role: 'assistant',
+        content: `Error: ${
+          error instanceof Error ? error.message : 'Unexpected error'
+        }`,
+      };
+      setMessages((prev) => [...prev, assistantMessage]);
     } finally {
       setLoading(false);
     }
