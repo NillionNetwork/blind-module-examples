@@ -3,6 +3,9 @@
   "version": "0.2.0",
   "private": true,
   "scripts": {
+    "clean:next": "node scripts/clean-next-cache.mjs",
+    "predev": "npm run clean:next",
+    "prebuild": "npm run clean:next",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

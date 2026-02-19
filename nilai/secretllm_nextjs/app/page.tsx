@@ -7,6 +7,8 @@ export default function Home() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  const [isThemeReady, setIsThemeReady] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -16,6 +18,29 @@ export default function Home() {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  useEffect(() => {
+    const savedTheme = window.localStorage.getItem('secretllm-theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const initialTheme =
+      savedTheme === 'light' || savedTheme === 'dark'
+        ? savedTheme
+        : prefersDark
+          ? 'dark'
+          : 'light';
+
+    setTheme(initialTheme);
+    document.documentElement.classList.toggle('dark', initialTheme === 'dark');
+    setIsThemeReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isThemeReady) return;
+    window.localStorage.setItem('secretllm-theme', theme);
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+  }, [theme, isThemeReady]);
+
+  const hasMessages = messages.length > 0;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -87,88 +112,142 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <main className="flex-1 flex flex-col max-w-2xl mx-auto w-full py-10">
-        <div className="sticky top-0 z-10 backdrop-blur-sm">
-          <div className="max-w-2xl mx-auto py-6">
-            <h1 className="text-3xl font-bold text-center dark:text-white">
-              Chat with the Blind Computer 💻
-            </h1>
-          </div>
-        </div>
+    <div className="relative min-h-screen overflow-hidden bg-[var(--page-bg)] text-[var(--page-fg)] transition-colors duration-300">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute left-1/2 top-0 h-96 w-96 -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.08),transparent_65%)] dark:bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1),transparent_70%)]" />
+        <div className="absolute bottom-0 left-0 h-56 w-56 rounded-full bg-[radial-gradient(circle_at_center,rgba(15,23,42,0.12),transparent_72%)] dark:bg-[radial-gradient(circle_at_center,rgba(148,163,184,0.14),transparent_72%)]" />
+      </div>
 
-        {/* Messages container */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4 border-2 border-gray-600 dark:border-gray-600 rounded-xl">
-          {messages.map((message, index) => (
-            <div
-              key={index}
-              className={`flex ${
-                message.role === 'user' ? 'justify-end' : 'justify-start'
-              }`}
-            >
-              <div
-                className={`
-                  max-w-[80%] rounded-lg px-4 py-2
-                  ${
-                    message.role === 'user'
-                      ? 'bg-black text-white dark:bg-white dark:text-black'
-                      : 'bg-gray-100 text-black dark:bg-gray-800 dark:text-white'
-                  }
-                `}
-              >
-                {message.content}
-              </div>
-            </div>
-          ))}
-          {loading && (
-            <div className="flex justify-start">
-              <div className="bg-gray-100 dark:bg-gray-800 rounded-lg px-4 py-2 text-black dark:text-white flex items-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 animate-spin"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                  />
-                </svg>
-              </div>
-            </div>
-          )}
-          <div ref={messagesEndRef} />
-        </div>
-
-        {/* Input form */}
-        <div className="p-4">
-          <form
-            onSubmit={handleSubmit}
-            className="flex gap-2 max-w-2xl mx-auto"
+      <main className="relative mx-auto flex min-h-screen w-full max-w-5xl flex-col px-4 pb-6 pt-6 sm:px-6 sm:pb-8 sm:pt-8">
+        <div className="flex justify-end">
+          <button
+            type="button"
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+            className="inline-flex h-11 items-center gap-2 rounded-full border border-[var(--toggle-border)] bg-[var(--toggle-bg)] px-5 text-xs font-medium uppercase tracking-[0.14em] text-[var(--muted-fg)] transition hover:border-[var(--page-fg)] hover:opacity-90"
+            aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
           >
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              className="flex-1 px-4 py-2 rounded-lg border 
-                dark:bg-gray-800 dark:border-gray-700 
-                focus:outline-none focus:ring-2 focus:ring-gray-500 
-                dark:text-white"
-              placeholder="What would you like to know?"
-            />
-            <button
-              type="submit"
-              disabled={loading}
-              className="px-4 py-2 bg-black text-white dark:bg-white dark:text-black 
-                rounded-lg disabled:opacity-50 hover:opacity-90 transition-opacity"
-            >
-              Send
-            </button>
-          </form>
+            {isThemeReady && theme === 'dark' ? (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                className="h-4 w-4"
+              >
+                <circle cx="12" cy="12" r="4.2" />
+                <path d="M12 2.5v2.2M12 19.3v2.2M4.9 4.9l1.6 1.6M17.5 17.5l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.9 19.1l1.6-1.6M17.5 6.5l1.6-1.6" />
+              </svg>
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                className="h-4 w-4"
+              >
+                <path d="M21 13.1A8.6 8.6 0 1110.9 3a7.2 7.2 0 0010.1 10.1z" />
+              </svg>
+            )}
+          </button>
         </div>
+
+        {!hasMessages && !loading && (
+          <section className="animate-fade-up flex flex-1 items-center justify-center pb-14 text-center sm:pb-20">
+            <div>
+              <h1 className="font-display text-[clamp(2.6rem,8vw,5.5rem)] lowercase leading-[0.9] tracking-[-0.055em]">
+                secretllm chat
+              </h1>
+              <p className="mt-4 text-[11px] uppercase tracking-[0.5em] text-[var(--muted-fg)] sm:text-sm">
+                Private LLM Inference.
+              </p>
+            </div>
+          </section>
+        )}
+
+        <section
+          className={`flex items-end justify-center pb-2 ${hasMessages || loading ? 'flex-1' : ''
+            }`}
+        >
+          <div
+            className={`flex w-full max-w-3xl flex-col ${hasMessages || loading ? 'h-full' : ''
+              }`}
+          >
+            <div
+              className={`px-1 sm:px-2 ${hasMessages || loading
+                  ? 'flex-1 overflow-y-auto pb-6 pt-8'
+                  : 'pb-4 pt-0'
+                }`}
+            >
+              <div className="space-y-4">
+                {messages.map((message, index) => (
+                  <div
+                    key={index}
+                    className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'
+                      }`}
+                  >
+                    <div
+                      className={`max-w-[85%] rounded-2xl border px-4 py-3 text-sm leading-relaxed sm:text-[15px] ${message.role === 'user'
+                        ? 'border-black/10 bg-black text-white dark:border-white/20 dark:bg-white dark:text-black'
+                        : 'border-black/15 bg-white/85 text-black shadow-sm backdrop-blur dark:border-slate-400/30 dark:bg-slate-900/75 dark:text-slate-100'
+                        }`}
+                    >
+                      {message.content}
+                    </div>
+                  </div>
+                ))}
+                {loading && (
+                  <div className="flex justify-start">
+                    <div className="inline-flex items-center rounded-2xl border border-black/15 bg-white/85 px-4 py-3 text-sm text-black shadow-sm dark:border-slate-400/30 dark:bg-slate-900/75 dark:text-slate-100">
+                      <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                      Thinking...
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div ref={messagesEndRef} />
+            </div>
+
+            <form
+              onSubmit={handleSubmit}
+              className="mb-1 flex items-center gap-2 rounded-2xl border border-[var(--input-border)] bg-[var(--input-bg)] p-2 shadow-[0_20px_45px_-34px_rgba(15,23,42,0.55)] backdrop-blur-sm"
+            >
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Enter your message here..."
+                className="h-12 flex-1 rounded-xl bg-transparent px-4 text-sm text-[var(--page-fg)] placeholder:text-[var(--muted-fg)] focus:outline-none sm:text-base"
+              />
+              <button
+                type="submit"
+                disabled={loading}
+                className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-black text-xl text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-white dark:text-black"
+                aria-label="Send message"
+              >
+                {loading ? (
+                  '…'
+                ) : (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.3"
+                    className="h-5 w-5"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M4 12h14M13 5l7 7-7 7"
+                    />
+                  </svg>
+                )}
+              </button>
+            </form>
+          </div>
+        </section>
       </main>
     </div>
   );
