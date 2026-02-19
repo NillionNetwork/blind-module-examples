@@ -4,7 +4,8 @@ This is a [Next.js](https://nextjs.org/) app demoing a private chat flow with Se
 
 ## Getting Started
 
-Setup .env with your nilAI API key.
+Setup `.env` with your nilAI credential in `NILLION_API_KEY`.
+- This example uses direct API-key authentication only (`Bearer` token).
 
 ```
 cp .env.example .env
@@ -12,9 +13,14 @@ cp .env.example .env
 
 Install project dependencies
 
-```
+```bash
 npm i
 ```
+
+This example calls nilAI directly:
+
+- Base URL: `https://api.nilai.nillion.network/v1/`
+- Model: `openai/gpt-oss-20b`
 
 Run the development server:
 

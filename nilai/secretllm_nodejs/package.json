@@ -1,6 +1,6 @@
 {
   "name": "secretllm_nodejs",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -10,7 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "dotenv": "^16.4.7",
-    "openai": "^4.84.1"
+    "dotenv": "^16.4.7"
   }
 }
