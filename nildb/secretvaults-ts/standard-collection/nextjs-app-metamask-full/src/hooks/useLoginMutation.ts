@@ -1,5 +1,4 @@
-import { Builder, type Command, Validator } from "@nillion/nuc";
-import { NilauthClient } from "@nillion/nilauth-client";
+import { Builder, type Command } from "@nillion/nuc";
 import { NucCmd, SecretVaultBuilderClient } from "@nillion/secretvaults";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { NETWORK_CONFIG } from "@/config";
@@ -25,27 +24,14 @@ async function login(
     throw new Error("No stored session found to login.");
   }
 
-  log("📦 Found stored session, re-hydrating clients...");
-  const nilauthClient = await NilauthClient.create({
-    baseUrl: NETWORK_CONFIG.nilauth,
-    chainId: NETWORK_CONFIG.nilauthChainId,
-  });
 
   const nillionClient = await SecretVaultBuilderClient.from({
     signer,
-    nilauthClient,
     dbs: NETWORK_CONFIG.nildb,
     blindfold: { operation: "store" },  // Enable encryption for %allot fields
-    rootToken: storedRootToken,
   });
 
   log("✅ Clients re-hydrated.");
-
-  log("🔑 Validating stored root token...");
-  const rootToken = await Validator.parse(storedRootToken, {
-    rootIssuers: [nilauthClient.nilauthDid.didString],
-  });
-  log("✅ Root token validated.");
 
   // Reuse stored nildb tokens if available, otherwise mint fresh ones
   let nildbTokens: Record<string, string>;
@@ -56,7 +42,8 @@ async function login(
     log(`🔨 Minting fresh invocation tokens for ${nillionClient.nodes.length} NilDB nodes...`);
     nildbTokens = {};
     for (const node of nillionClient.nodes) {
-      nildbTokens[node.id.didString] = await Builder.invocationFrom(rootToken)
+      nildbTokens[node.id.didString] = await Builder.invocation()
+        .subject(await nillionClient.getDid())
         .audience(node.id)
         .command(NucCmd.nil.db.root as Command)
         .expiresIn(86400)
@@ -100,7 +87,7 @@ async function login(
     }
   }
 
-  return { nillionClient, nilauthClient, rootToken, nildbTokens };
+  return { nillionClient, nildbTokens };
 }
 
 export const useLoginMutation = () => {

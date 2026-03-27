@@ -32,14 +32,6 @@ export function usePersistedConnection() {
     }
   }, []);
 
-  const setStoredRootToken = useCallback((token: string) => {
-    try {
-      localStorage.setItem(ROOT_TOKEN_KEY, token);
-    } catch (e) {
-      console.error("Failed to write root token to localStorage", e);
-    }
-  }, []);
-
   const getStoredNildbTokens = useCallback((): Record<string, string> | null => {
     try {
       const item = localStorage.getItem(NILDB_TOKENS_KEY);
@@ -74,7 +66,6 @@ export function usePersistedConnection() {
     hasConnected,
     setMetaMaskConnected,
     getStoredRootToken,
-    setStoredRootToken,
     getStoredNildbTokens,
     setStoredNildbTokens,
     clearAll,
