@@ -1,12 +1,8 @@
-import type { Envelope } from "@nillion/nuc";
-import type { NilauthClient } from "@nillion/nilauth-client";
 import type { SecretVaultBuilderClient } from "@nillion/secretvaults";
 import { useQuery } from "@tanstack/react-query";
 
 export interface Session {
   nillionClient: SecretVaultBuilderClient;
-  nilauthClient: NilauthClient;
-  rootToken: Envelope;
   nildbTokens: Record<string, string>;
 }
 
