@@ -29,7 +29,7 @@ export async function POST(req: Request) {
         Authorization: `Bearer ${apiKey.trim()}`,
       },
       body: JSON.stringify({
-        model: 'openai/gpt-oss-20b',
+        model: 'google/gemma-4-26B-A4B-it',
         messages: body.messages,
         temperature: 0.2,
       }),

@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
 
     // >>> Client uses the delegation token to make a request
     const response = await client.chat.completions.create({
-      model: 'google/gemma-3-27b-it',
+      model: 'google/gemma-4-26B-A4B-it',
       messages: [{ role: 'user', content: message }],
     });
 
