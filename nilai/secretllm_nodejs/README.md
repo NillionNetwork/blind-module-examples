@@ -25,7 +25,7 @@ NILLION_API_KEY=YOUR_API_KEY_HERE
 This example uses direct API-key authentication only (`Bearer` token).
 
 - Base URL: `https://api.nilai.nillion.network/v1/`
-- Model: `openai/gpt-oss-20b`
+- Model: `google/gemma-4-26B-A4B-it`
 
 ### 4. Generate text:
 

@@ -20,7 +20,7 @@ npm i
 This example calls nilAI directly:
 
 - Base URL: `https://api.nilai.nillion.network/v1/`
-- Model: `openai/gpt-oss-20b`
+- Model: `google/gemma-4-26B-A4B-it`
 
 Run the development server:
 
